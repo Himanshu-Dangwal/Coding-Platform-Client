@@ -25,9 +25,10 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
             );
 
             if (response.data.success) {
+                console.log(response.data);
                 if (isLogin) {
                     // Storing the token from response
-                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('token', response.data.authToken);
 
                     // Update the isLoggedIn state to true after login
                     setIsLoggedIn(true);
