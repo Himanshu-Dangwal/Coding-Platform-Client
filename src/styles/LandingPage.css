@@ -1,0 +1,82 @@
+.landing-page {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: #333;
+    margin-top: 2%;
+}
+
+.landing-header {
+    background-color: #767e87;
+    color: white;
+    padding: 50px 20px;
+}
+
+.landing-header h1 {
+    font-size: 48px;
+    margin: 0;
+}
+
+.landing-header p {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.features,
+.testimonials {
+    padding: 40px 20px;
+}
+
+.features h2,
+.testimonials h2 {
+    margin-bottom: 20px;
+}
+
+.feature-list,
+.testimonial-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.feature-item,
+.testimonial-item {
+    width: 250px;
+    margin: 15px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.feature-item h3 {
+    color: #767e87;
+}
+
+.landing-footer {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
