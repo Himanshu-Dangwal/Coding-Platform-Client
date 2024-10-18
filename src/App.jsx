@@ -5,6 +5,7 @@ import Auth from './components/Auth';
 import ProblemList from './components/ProblemList';
 import Problem from './components/Problem';
 import LandingPage from './components/LandingPage';
+import Attempt from './components/Attempt';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ function App() {
           <Route path="/register" element={<Auth isLogin={false} />} />
           <Route path="/problems" element={<ProblemList />} />
           <Route path="/problems/:id" element={<Problem />} />
+          <Route path="/attempt/:id" element={<Attempt />} />
         </Routes>
       </div>
     </Router>

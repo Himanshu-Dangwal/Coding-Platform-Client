@@ -1,18 +1,17 @@
 // components/Problem.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Problem = () => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
-    const [userCode, setUserCode] = useState('');
-    const [result, setResult] = useState(null);
 
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/problems/${id}`);
+                const response = await axios.get(`http://localhost:8080/api/problems/${id}`);
                 setProblem(response.data);
             } catch (error) {
                 console.error('Error fetching problem', error);
@@ -22,46 +21,33 @@ const Problem = () => {
         fetchProblem();
     }, [id]);
 
-    const handleSubmit = async () => {
-        try {
-            const response = await axios.post(`http://localhost:5000/api/submissions/${id}/submit`, { userCode });
-            setResult(response.data.submissionResult);
-        } catch (error) {
-            console.error('Error submitting code', error);
-        }
-    };
-
     return (
-        <div className="container">
+        <div className="container mt-5">
             {problem ? (
                 <>
-                    <h2>{problem.title}</h2>
-                    <p>{problem.description}</p>
-                    <pre>{problem.sampleTestCases.map((tc, index) => (
-                        <div key={index}>
-                            <strong>Input {index + 1}:</strong> {tc.input}
-                            <br />
-                            <strong>Output {index + 1}:</strong> {tc.output}
-                            <br />
-                        </div>
-                    ))}</pre>
+                    <div className="card shadow-lg p-4 mb-5 bg-white rounded">
+                        <h2 className="card-title text-center mb-4">{problem.title}</h2>
+                        <div className="card-body">
+                            <p className="card-text"><strong>Description:</strong> {problem.description}</p>
 
-                    <textarea
-                        className="form-control"
-                        rows="10"
-                        placeholder="Write your code here"
-                        value={userCode}
-                        onChange={(e) => setUserCode(e.target.value)}
-                    />
-                    <button className="btn btn-success mt-3" onClick={handleSubmit}>
-                        Submit
-                    </button>
-
-                    {result && (
-                        <div className="alert alert-info mt-3">
-                            <strong>Result:</strong> {result.stdout || result.stderr}
+                            <h5 className="mt-4">Sample Test Cases:</h5>
+                            <ul className="list-group list-group-flush">
+                                {problem.sampleTestCases.map((tc, index) => (
+                                    <li key={index} className="list-group-item">
+                                        <strong>Input {index + 1}:</strong> <code>{tc.input}</code>
+                                        <br />
+                                        <strong>Expected Output {index + 1}:</strong> <code>{tc.output}</code>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    )}
+                    </div>
+
+                    <div className="text-center">
+                        <Link to={`/attempt/${id}`} className="btn btn-primary btn-lg">
+                            Attempt Problem
+                        </Link>
+                    </div>
                 </>
             ) : (
                 <p>Loading problem...</p>
