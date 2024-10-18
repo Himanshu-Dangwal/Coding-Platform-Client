@@ -9,12 +9,16 @@ const Attempt = () => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
     const [code, setCode] = useState('');
+    // const [userCode, setUserCode] = useState('');
     const [language, setLanguage] = useState('C++');
     const [theme, setTheme] = useState('vs-dark');
     const [runResult, setRunResult] = useState(null);
     const [submitResult, setSubmitResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [statusIndicators, setStatusIndicators] = useState([]);
+    const [congratulations, setCongratulations] = useState(false);
+    const [totalTestCases, setTotalCases] = useState(0);
+    const [testCasesPassed, setTestCasesPassed] = useState(0);
 
     useEffect(() => {
         const fetchProblem = async () => {
@@ -44,6 +48,7 @@ const Attempt = () => {
 
     // Handle code editor changes
     const handleEditorChange = (value) => {
+        console.log(value);
         setCode(value);
     };
 
@@ -65,10 +70,13 @@ const Attempt = () => {
     };
 
     // Handle Run button click
+
     const handleRunCode = async () => {
         setLoading(true); // Start loader
         try {
-            const response = await axios.post(`http://localhost:8080/api/submissions/${id}/run`, { code, language });
+            console.log(code);
+            // Directly use code variable instead of userCode state
+            const response = await axios.post(`http://localhost:8080/api/submissions/${id}/run`, { userCode: code, language });
             console.log(response.data);
             setRunResult(response.data);
             updateStatusIndicators(response.data.results);
@@ -79,23 +87,64 @@ const Attempt = () => {
         }
     };
 
+
     const updateStatusIndicators = (results) => {
-        const updatedIndicators = results.map(result => (result.success ? 'green' : 'red'));
+        // Create a new array to hold the updated indicators
+        const updatedIndicators = [...statusIndicators]; // Use the spread operator to preserve the current state
+
+        // Update only the first two entries in the results
+        for (let i = 0; i < Math.min(2, results.length); i++) {
+            updatedIndicators[i] = results[i].success ? 'green' : 'red';
+        }
+
+        // Update the status indicators state
         setStatusIndicators(updatedIndicators);
     };
 
+
+
     // Handle Submit button click
     const handleSubmitCode = async () => {
+        setLoading(true);
         try {
-            const response = await axios.post(`http://localhost:8080/api/submissions/${id}/submit`, { code, language });
+            // setUserCode(code);
+            const response = await axios.post(`http://localhost:8080/api/submissions/${id}/submit`, { userCode: code, language });
+            updateStatusIndicators(response.data.results);
             setSubmitResult(response.data);
+
+            let cases = response.data.results.length;
+            setTotalCases(cases);
+
+            let results = response.data.results;
+            let cnt = 0.
+            results.map((result) => {
+                if (result.success) {
+                    cnt++;
+                }
+            })
+
+            console.log(cases);
+            console.log(cnt);
+
+            setTestCasesPassed(cnt);
+
+            if (cases == cnt) {
+                setCongratulations(true);
+            }
         } catch (error) {
             console.error('Error submitting code:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="container mt-4">
+            {congratulations && (
+                <div className="congratulations-animation">
+                    <h2>🎉 Congratulations! You passed all test cases! 🎉</h2>
+                </div>
+            )}
             <div className="row">
                 {/* Problem details card (Left side) */}
                 <div className="col-md-6 left-side">
@@ -110,10 +159,6 @@ const Attempt = () => {
                                         <strong>Input:</strong> <pre>{testCase.input}</pre>
                                         <strong>Output:</strong> <pre>{testCase.output}</pre>
                                         {/* Status indicator */}
-                                        <div
-                                            className="indicator"
-                                            style={{ backgroundColor: statusIndicators[idx] }}
-                                        ></div>
                                     </div>
                                 ))}
                             </div>
@@ -159,17 +204,25 @@ const Attempt = () => {
                         <div className="sample-io-section mt-4">
                             <div className="io-block">
                                 <h5>Sample Input 1</h5>
+                                <div className="indicator"
+                                    style={{ backgroundColor: statusIndicators[0] }} // Use index 0 for the first case
+                                ></div>
                                 <pre>{problem?.sampleTestCases[0]?.input}</pre>
                                 <h5>Sample Output 1</h5>
                                 <pre>{problem?.sampleTestCases[0]?.output}</pre>
                             </div>
+
                             <div className="io-block">
                                 <h5>Sample Input 2</h5>
+                                <div className="indicator"
+                                    style={{ backgroundColor: statusIndicators[1] }} // Use index 1 for the second case
+                                ></div>
                                 <pre>{problem?.sampleTestCases[1]?.input}</pre>
                                 <h5>Sample Output 2</h5>
                                 <pre>{problem?.sampleTestCases[1]?.output}</pre>
                             </div>
                         </div>
+
 
                         {/* Run and Submit buttons */}
                         <div className="action-buttons mt-4">
@@ -177,7 +230,7 @@ const Attempt = () => {
                                 {loading ? 'Running...' : '▶ Run'}
                             </button>
                             <button className="btn btn-success" onClick={handleSubmitCode}>
-                                Submit
+                                {loading ? 'Processing...' : 'Submit'}
                             </button>
                         </div>
 
