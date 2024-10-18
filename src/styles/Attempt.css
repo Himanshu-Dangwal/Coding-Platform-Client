@@ -1,0 +1,120 @@
+.attempt-page {
+    display: flex;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.problem-details {
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background-color: white;
+    border-right: 1px solid #ddd;
+}
+
+.editor-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.sample-io-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22%;
+}
+
+.io-block {
+    width: 48%;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+pre {
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.run-btn,
+.submit-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.run-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.submit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.run-result,
+.submit-result {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.test-case-container {
+    width: 100%;
+}
+
+.extra-title {
+    text-align: center;
+    margin-bottom: 4%;
+    font-weight: bolder;
+    text-decoration: underline;
+    background-color: #121010;
+    color: #E6E6FA;
+    /* Example with gold */
+    font-size: 50px;
+    padding: 10px;
+    border-radius: 5px;
+    /* Optional rounded corners */
+}
+
+.extra-text {
+    font-weight: bolder;
+    font-size: large;
+}
+
+.left-side {
+    width: 100%;
+    margin-bottom: 5%;
+}
+
+.right-side {
+    width: 100%;
+}
+
+.indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
