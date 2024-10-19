@@ -6,6 +6,7 @@ import ProblemList from './components/ProblemList';
 import Problem from './components/Problem';
 import LandingPage from './components/LandingPage';
 import Attempt from './components/Attempt';
+import ContactMe from './components/ContactMe';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +37,7 @@ function App() {
           <Route path="/problems" element={<ProblemList />} />
           <Route path="/problems/:id" element={<Problem />} />
           <Route path="/attempt/:id" element={<Attempt />} />
+          <Route path="/contact-me" element={<ContactMe />} />
         </Routes>
       </div>
     </Router>

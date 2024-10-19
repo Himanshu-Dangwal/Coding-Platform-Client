@@ -1,82 +1,157 @@
-.landing-page {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    color: #333;
-    margin-top: 2%;
-}
-
-.landing-header {
-    background-color: #767e87;
-    color: white;
-    padding: 50px 20px;
-}
-
-.landing-header h1 {
-    font-size: 48px;
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #4a90e2, #ffffff);
 }
 
-.landing-header p {
-    font-size: 24px;
+/* Hero Section */
+.landing-header {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1d3557, #457b9d);
+    color: #ffffff;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.btn-animated {
+    animation: bounce 2s infinite;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Override hover background if necessary, but in Bootstrap, 'btn-primary' should be enough */
+.btn-animated:hover {
+    background-color: #0056b3;
+    /* Use a Bootstrap-compatible shade */
+    transform: translateY(-5px);
+    /* Add a subtle lift on hover */
+}
+
+/* Animation for bouncing effect */
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+/* Features Section */
+.features {
+    padding: 60px 20px;
+    background-color: #f1f1f1;
+    text-align: center;
+}
+
+.feature-list {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+}
+
+.feature-item {
+    width: 22%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-10px);
+}
+
+/* Parallax Section */
+.parallax-section {
+    background: url('../assets/parallax-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.parallax-content h2 {
+    font-size: 2.5rem;
     margin-bottom: 20px;
 }
 
-.features,
+.parallax-content p {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+}
+
+/* Testimonials Section */
 .testimonials {
-    padding: 40px 20px;
+    background-color: #ececec;
+    padding: 60px 20px;
+    text-align: center;
 }
 
-.features h2,
-.testimonials h2 {
-    margin-bottom: 20px;
-}
-
-.feature-list,
 .testimonial-list {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
 }
 
-.feature-item,
 .testimonial-item {
-    width: 250px;
-    margin: 15px;
+    width: 30%;
+    background: #fff;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.feature-item h3 {
-    color: #767e87;
-}
-
+/* Footer Section */
 .landing-footer {
-    background-color: #f8f9fa;
-    padding: 20px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
+    background-color: #333;
     color: white;
-    background-color: #007bff;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
+    padding: 20px;
+    text-align: center;
 }
