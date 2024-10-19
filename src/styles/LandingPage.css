@@ -81,7 +81,7 @@ body {
 
 
 /* Features Section */
-.features {
+/* .features {
     padding: 60px 20px;
     background-color: #f1f1f1;
     text-align: center;
@@ -105,6 +105,61 @@ body {
 .feature-item:hover {
     transform: translateY(-10px);
 }
+    
+*/
+
+/* Features Section */
+.features {
+    padding: 60px 20px;
+    background-color: #f1f1f1;
+    text-align: center;
+}
+
+.features h2 {
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    /* Adjusted font size for better visibility */
+}
+
+/* Feature List */
+.feature-list {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows items to wrap onto multiple lines */
+    justify-content: center;
+    /* Center aligns the feature items */
+}
+
+/* Individual Feature Item */
+.feature-item {
+    flex: 1 1 250px;
+    /* Flex property for responsive behavior */
+    margin: 15px;
+    /* Margin for spacing between items */
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+    /* Center text inside each item */
+}
+
+/* Hover Effect */
+.feature-item:hover {
+    transform: translateY(-10px);
+}
+
+/* Icon Styles */
+.feature-item i {
+    font-size: 3rem;
+    /* Larger icon size for better visibility */
+    color: #4a90e2;
+    /* Example color for icons */
+    margin-bottom: 15px;
+    /* Space between icon and text */
+}
+
 
 /* Parallax Section */
 .parallax-section {
