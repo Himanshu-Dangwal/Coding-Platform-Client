@@ -31,7 +31,8 @@ const Attempt = () => {
                 );
 
                 if (languageMapping) {
-                    setCode(languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+                    const storedCode = localStorage.getItem(`problem_${id}_${language}`);
+                    setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
                 }
 
                 setStatusIndicators(Array(response.data.sampleTestCases.length).fill('orange'));
@@ -44,18 +45,21 @@ const Attempt = () => {
     }, [id, language]);
 
     const handleEditorChange = (value) => {
-        console.log(value);
         setCode(value);
+        console.log(value);
     };
 
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
-
+        console.log(e.target.value);
         const languageMapping = problem?.problemLanguageMapping.find(
             (mapping) => mapping.language.toLowerCase() === e.target.value
         );
+
+        console.log(languageMapping)
         if (languageMapping) {
-            setCode(languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+            const storedCode = localStorage.getItem(`problem_${id}_${e.target.value}`);
+            setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
         }
     };
 
@@ -63,12 +67,16 @@ const Attempt = () => {
         setTheme(e.target.value);
     };
 
+    // Save code to localStorage
+    const handleSaveCode = () => {
+        localStorage.setItem(`problem_${id}_${language}`, code);
+        alert('Code saved successfully!');
+    };
+
     const handleRunCode = async () => {
         setLoading(true);
         try {
-            console.log(code);
             const response = await axios.post(`http://localhost:8080/api/submissions/${id}/run`, { userCode: code, language });
-            console.log(response.data);
             setRunResult(response.data);
             updateStatusIndicators(response.data.results);
         } catch (error) {
@@ -80,11 +88,9 @@ const Attempt = () => {
 
     const updateStatusIndicators = (results) => {
         const updatedIndicators = [...statusIndicators];
-
         for (let i = 0; i < Math.min(2, results.length); i++) {
             updatedIndicators[i] = results[i].success ? 'green' : 'red';
         }
-
         setStatusIndicators(updatedIndicators);
     };
 
@@ -105,8 +111,6 @@ const Attempt = () => {
                     cnt++;
                 }
             });
-
-            console.log(results);
 
             setTestCasesPassed(cnt);
 
@@ -159,7 +163,7 @@ const Attempt = () => {
                                 <select id="language-select" className="form-control" value={language} onChange={handleLanguageChange}>
                                     <option value="C++">C++</option>
                                     <option value="javascript">JavaScript</option>
-                                    <option value="python">Python</option>
+                                    <option value="Python">Python</option>
                                     <option value="java">Java</option>
                                 </select>
                             </div>
@@ -170,6 +174,7 @@ const Attempt = () => {
                                     <option value="light">Light</option>
                                 </select>
                             </div>
+                            <button className="btn btn-warning" onClick={handleSaveCode}>💾 Save</button>
                         </div>
 
                         <Editor
@@ -227,23 +232,10 @@ const Attempt = () => {
                                             <div className="card mb-3">
                                                 <div className="card-body">
                                                     <h6 className="card-title">Test Case {index + 1}</h6>
-                                                    <p><strong>Input:</strong> <pre>{result.input}</pre></p>
-                                                    <p><strong>Expected Output:</strong> <pre>{result.expected_output}</pre></p>
-                                                    <p><strong>Your Output:</strong> <pre>{atob(result.actual_output)}</pre></p>
-                                                    <p>
-                                                        <strong>Status:</strong>
-                                                        {result.success ? (
-                                                            <span className="text-success">Accepted</span>
-                                                        ) : result.status === 'Compilation Error' ? (
-                                                            <span className="text-danger">Compilation Error</span>
-                                                        ) : result.status === 'Wrong Answer' ? (
-                                                            <span className="text-warning">Wrong Answer</span>
-                                                        ) : result.status === 'Time Limit Exceeded' ? (
-                                                            <span className="text-warning">Time Limit Exceeded</span>
-                                                        ) : (
-                                                            <span>{result.status}</span>
-                                                        )}
-                                                    </p>
+                                                    <p className="card-text">Success: {result.success ? '✅' : '❌'}</p>
+                                                    <p className="card-text">Input: {result.input}</p>
+                                                    <p className="card-text">Expected: {result.expected_output}</p>
+                                                    <p className="card-text">Received: {atob(result.actual_output)}</p>
                                                 </div>
                                             </div>
                                         </div>
