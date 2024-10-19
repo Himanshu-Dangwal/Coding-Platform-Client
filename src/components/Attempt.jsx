@@ -1,3 +1,135 @@
+// import React, { useState, useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
+// import axios from 'axios';
+// import Editor from '@monaco-editor/react';
+// import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+// import '../styles/Attempt.css'; // Import the custom CSS
+
+// const Attempt = () => {
+//     const { id } = useParams();
+//     const [problem, setProblem] = useState(null);
+//     const [code, setCode] = useState('');
+//     const [language, setLanguage] = useState('C++');
+//     const [theme, setTheme] = useState('vs-dark');
+//     const [runResult, setRunResult] = useState(null);
+//     const [submitResult, setSubmitResult] = useState(null);
+//     const [loading, setLoading] = useState(false);
+//     const [statusIndicators, setStatusIndicators] = useState([]);
+//     const [congratulations, setCongratulations] = useState(false);
+//     const [totalTestCases, setTotalCases] = useState(0);
+//     const [testCasesPassed, setTestCasesPassed] = useState(0);
+
+//     useEffect(() => {
+//         const fetchProblem = async () => {
+//             try {
+//                 let HOST = "https://coding-platform-primary-backend.onrender.com";
+//                 const response = await axios.get(`${HOST}/api/problems/attempt/${id}`);
+//                 setProblem(response.data);
+
+//                 const languageMappingArray = response.data.problemLanguageMapping;
+//                 let languageMapping = languageMappingArray.find(
+//                     (mapping) => mapping.language === language
+//                 );
+
+//                 if (languageMapping) {
+//                     const storedCode = localStorage.getItem(`problem_${id}_${language}`);
+//                     setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+//                 }
+
+//                 setStatusIndicators(Array(response.data.sampleTestCases.length).fill('orange'));
+//             } catch (error) {
+//                 console.error('Error fetching problem:', error);
+//             }
+//         };
+
+//         fetchProblem();
+//     }, [id, language]);
+
+//     const handleEditorChange = (value) => {
+//         setCode(value);
+//         console.log(value);
+//     };
+
+//     const handleLanguageChange = (e) => {
+//         setLanguage(e.target.value);
+//         console.log(e.target.value);
+//         const languageMapping = problem?.problemLanguageMapping.find(
+//             (mapping) => mapping.language.toLowerCase() === e.target.value
+//         );
+
+//         console.log(languageMapping)
+//         if (languageMapping) {
+//             const storedCode = localStorage.getItem(`problem_${id}_${e.target.value}`);
+//             setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+//         }
+//     };
+
+//     const handleThemeChange = (e) => {
+//         setTheme(e.target.value);
+//     };
+
+//     // Save code to localStorage
+//     const handleSaveCode = () => {
+//         localStorage.setItem(`problem_${id}_${language}`, code);
+//         alert('Code saved successfully!');
+//     };
+
+//     const handleRunCode = async () => {
+//         setLoading(true);
+//         try {
+//             let HOST = "https://coding-platform-primary-backend.onrender.com";
+//             const response = await axios.post(`${HOST}/api/submissions/${id}/run`, { userCode: code, language });
+//             setRunResult(response.data);
+//             updateStatusIndicators(response.data.results);
+//         } catch (error) {
+//             console.error('Error running code:', error);
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+
+//     const updateStatusIndicators = (results) => {
+//         const updatedIndicators = [...statusIndicators];
+//         for (let i = 0; i < Math.min(2, results.length); i++) {
+//             updatedIndicators[i] = results[i].success ? 'green' : 'red';
+//         }
+//         setStatusIndicators(updatedIndicators);
+//     };
+
+//     const handleSubmitCode = async () => {
+//         setLoading(true);
+//         try {
+//             let HOST = "https://coding-platform-primary-backend.onrender.com";
+//             const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
+//             updateStatusIndicators(response.data.results);
+//             setSubmitResult(response.data);
+
+//             let cases = response.data.results.length;
+//             setTotalCases(cases);
+
+//             let results = response.data.results;
+//             let cnt = 0;
+//             results.forEach((result) => {
+//                 if (result.success) {
+//                     cnt++;
+//                 }
+//             });
+
+//             setTestCasesPassed(cnt);
+
+//             if (cases === cnt) {
+//                 setCongratulations(true);
+//                 setTimeout(() => {
+//                     setCongratulations(false);
+//                 }, 1000); // Show for 1 second
+//             }
+//         } catch (error) {
+//             console.error('Error submitting code:', error);
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -19,6 +151,29 @@ const Attempt = () => {
     const [totalTestCases, setTotalCases] = useState(0);
     const [testCasesPassed, setTestCasesPassed] = useState(0);
 
+    // Define default boilerplate code for each language
+    const defaultBoilerplateCode = {
+        "C++": `#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    
+}`,
+        "Java": `public class Main {
+    public static void main(String[] args) {
+        
+    }
+}`,
+        "Python": `def main():
+    
+if __name__ == "__main__":
+    main()`,
+        "Javascript": `function main() {
+    
+}
+main();`
+    };
+
     useEffect(() => {
         const fetchProblem = async () => {
             try {
@@ -26,14 +181,19 @@ const Attempt = () => {
                 const response = await axios.get(`${HOST}/api/problems/attempt/${id}`);
                 setProblem(response.data);
 
+                // Get language mapping for the default language
                 const languageMappingArray = response.data.problemLanguageMapping;
                 let languageMapping = languageMappingArray.find(
                     (mapping) => mapping.language === language
                 );
 
+                // Set code based on language mapping or default
                 if (languageMapping) {
                     const storedCode = localStorage.getItem(`problem_${id}_${language}`);
                     setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+                } else {
+                    // Set default boilerplate code if no mapping found
+                    setCode(defaultBoilerplateCode[language]);
                 }
 
                 setStatusIndicators(Array(response.data.sampleTestCases.length).fill('orange'));
@@ -51,16 +211,20 @@ const Attempt = () => {
     };
 
     const handleLanguageChange = (e) => {
-        setLanguage(e.target.value);
-        console.log(e.target.value);
+        const selectedLanguage = e.target.value;
+        setLanguage(selectedLanguage);
+        console.log(selectedLanguage);
+
         const languageMapping = problem?.problemLanguageMapping.find(
-            (mapping) => mapping.language.toLowerCase() === e.target.value
+            (mapping) => mapping.language.toLowerCase() === selectedLanguage.toLowerCase()
         );
 
-        console.log(languageMapping)
         if (languageMapping) {
-            const storedCode = localStorage.getItem(`problem_${id}_${e.target.value}`);
+            const storedCode = localStorage.getItem(`problem_${id}_${selectedLanguage}`);
             setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+        } else {
+            // Set default boilerplate code if no mapping found
+            setCode(defaultBoilerplateCode[selectedLanguage]);
         }
     };
 
@@ -165,9 +329,9 @@ const Attempt = () => {
                                 <label htmlFor="language-select">Language:</label>
                                 <select id="language-select" className="form-control" value={language} onChange={handleLanguageChange}>
                                     <option value="C++">C++</option>
-                                    <option value="javascript">JavaScript</option>
+                                    <option value="Javascript">JavaScript</option>
                                     <option value="Python">Python</option>
-                                    <option value="java">Java</option>
+                                    <option value="Java">Java</option>
                                 </select>
                             </div>
                             <div className="form-group">
