@@ -4,48 +4,48 @@ import ProblemList from './ProblemList'; // Import the ProblemList component
 
 const MyProfile = () => {
     const [user, setUser] = useState(null);
-    const [completedProblems, setCompletedProblems] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    // const [completedProblems, setCompletedProblems] = useState([]);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState('');
 
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                setError('You haven\'t logged in yet.');
-                setLoading(false);
-                return;
-            }
+    // useEffect(() => {
+    //     const fetchUserProfile = async () => {
+    //         const token = localStorage.getItem('token');
+    //         if (!token) {
+    //             setError('You haven\'t logged in yet.');
+    //             setLoading(false);
+    //             return;
+    //         }
 
-            try {
-                // Fetch user profile
-                const profileResponse = await axios.get('https://coding-platform-primary-backend.onrender.com/api/user/profile', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setUser(profileResponse.data);
+    //         try {
+    //             // Fetch user profile
+    //             const profileResponse = await axios.get('https://coding-platform-primary-backend.onrender.com/api/user/profile', {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
+    //             setUser(profileResponse.data);
 
-                // Fetch completed problems
-                const problemsResponse = await axios.get('https://coding-platform-primary-backend.onrender.com/api/user/profile/problemsCompleted', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+    //             // Fetch completed problems
+    //             const problemsResponse = await axios.get('https://coding-platform-primary-backend.onrender.com/api/user/profile/problemsCompleted', {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
 
-                setCompletedProblems(problemsResponse.data); // Assuming response contains the list of completed problems
-            } catch (err) {
-                setError(err.response?.data?.message || 'Failed to fetch user profile');
-            } finally {
-                setLoading(false);
-            }
-        };
+    //             setCompletedProblems(problemsResponse.data); // Assuming response contains the list of completed problems
+    //         } catch (err) {
+    //             setError(err.response?.data?.message || 'Failed to fetch user profile');
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-        fetchUserProfile();
-    }, []);
+    //     fetchUserProfile();
+    // }, []);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p className="text-danger">{error}</p>;
+    // if (loading) return <p>Loading...</p>;
+    // if (error) return <p className="text-danger">{error}</p>;
 
     return (
         <div className="container my-5">
