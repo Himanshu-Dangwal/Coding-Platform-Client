@@ -7,7 +7,7 @@ import Problem from './components/Problem';
 import LandingPage from './components/LandingPage';
 import Attempt from './components/Attempt';
 import ContactMe from './components/ContactMe';
-import MyProfile from './components/Myprofile';
+import MyProfile from './components/MyProfile';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
