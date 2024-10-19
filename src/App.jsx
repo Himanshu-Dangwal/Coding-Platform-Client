@@ -7,6 +7,9 @@ import Problem from './components/Problem';
 import LandingPage from './components/LandingPage';
 import Attempt from './components/Attempt';
 import ContactMe from './components/ContactMe';
+import MyProfile from './components/Myprofile';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,6 +41,7 @@ function App() {
           <Route path="/problems/:id" element={<Problem />} />
           <Route path="/attempt/:id" element={<Attempt />} />
           <Route path="/contact-me" element={<ContactMe />} />
+          <Route path="/profile" element={<MyProfile />} />
         </Routes>
       </div>
     </Router>
