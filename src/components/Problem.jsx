@@ -12,6 +12,7 @@ const Problem = () => {
         const fetchProblem = async () => {
             try {
                 let HOST = "https://coding-platform-primary-backend.onrender.com";
+                // let HOST = process.env.REACT_APP_HOST;
                 const response = await axios.get(`${HOST}/api/problems/${id}`);
                 setProblem(response.data);
             } catch (error) {

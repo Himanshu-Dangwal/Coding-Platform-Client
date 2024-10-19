@@ -19,6 +19,7 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
                 : { username, email, password };
 
             // API call for login or registration
+            // let HOST = process.env.REACT_APP_HOST;
             let HOST = "https://coding-platform-primary-backend.onrender.com";
             const response = await axios.post(
                 `${HOST}/api/user/${isLogin ? 'login' : 'register'}`,

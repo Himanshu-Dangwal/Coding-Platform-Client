@@ -9,6 +9,8 @@ const ProblemList = () => {
     useEffect(() => {
         const fetchProblems = async () => {
             try {
+                // let HOST = process.env.REACT_APP_HOST || "http://localhost:8080";
+                // console.log(HOST);
                 let HOST = "https://coding-platform-primary-backend.onrender.com";
                 const response = await axios.get(`${HOST}/api/problems`);
                 setProblems(response.data);

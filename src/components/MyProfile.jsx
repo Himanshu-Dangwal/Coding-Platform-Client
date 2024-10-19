@@ -20,7 +20,10 @@ const MyProfile = () => {
 
             try {
                 // Fetch user profile
-                const profileResponse = await axios.get('https://coding-platform-primary-backend.onrender.com/api/user/profile', {
+                // let HOST = process.env.REACT_APP_HOST;
+                let HOST = "https://coding-platform-primary-backend.onrender.com";
+
+                const profileResponse = await axios.get(`${HOST}/api/user/profile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

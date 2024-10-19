@@ -178,6 +178,9 @@ main();`
         const fetchProblem = async () => {
             try {
                 let HOST = "https://coding-platform-primary-backend.onrender.com";
+                // let HOST = process.env.REACT_APP_HOST;
+                // let HOST = "http://localhost:8080"
+
                 const response = await axios.get(`${HOST}/api/problems/attempt/${id}`);
                 setProblem(response.data);
 
@@ -241,7 +244,11 @@ main();`
     const handleRunCode = async () => {
         setLoading(true);
         try {
+            // let HOST = process.env.REACT_APP_HOST;
             let HOST = "https://coding-platform-primary-backend.onrender.com";
+            // let HOST = "http://localhost:8080"
+            console.log(code)
+            console.log(language)
             const response = await axios.post(`${HOST}/api/submissions/${id}/run`, { userCode: code, language });
             setRunResult(response.data);
             updateStatusIndicators(response.data.results);
@@ -263,7 +270,10 @@ main();`
     const handleSubmitCode = async () => {
         setLoading(true);
         try {
+            // let HOST = process.env.REACT_APP_HOST;
             let HOST = "https://coding-platform-primary-backend.onrender.com";
+            // let HOST = "http://localhost:8080"
+
             const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
             updateStatusIndicators(response.data.results);
             setSubmitResult(response.data);
