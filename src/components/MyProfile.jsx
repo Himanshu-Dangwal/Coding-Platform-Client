@@ -13,7 +13,7 @@ const MyProfile = () => {
         const fetchUserProfile = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                setError("You haven't logged in yet.");
+                // setError("You haven't logged in yet.");
                 setLoading(false);
                 return;
             }
