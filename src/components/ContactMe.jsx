@@ -33,11 +33,11 @@ const ContactMe = () => {
     };
 
     return (
-        <div className="container my-5 mt-5">
-            <h2 className="text-center mb-4 display-4 fw-bold mt-5 text-success">Get in Touch</h2>
+        <div className="container my-5" style={{ marginTop: '80px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-6 col-md-8">
-                    <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm bg-light">
+                    <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm bg-light margin-top" >
+                        <h2 className="text-center mb-4 display-4 fw-bold text-success">Get in Touch</h2>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Name</label>
                             <input
@@ -81,7 +81,6 @@ const ContactMe = () => {
                 </div>
             </div>
         </div>
-
     );
 };
 
