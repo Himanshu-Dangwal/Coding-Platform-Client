@@ -125,19 +125,31 @@ pre {
 }
 
 .congratulations-animation {
-    color: green;
-    text-align: center;
-    font-size: 24px;
-    margin-top: 20px;
-    animation: fadeIn 1s ease-in-out forwards;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
+.congratulations-banner {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
     }
 
-    to {
-        opacity: 1;
+    100% {
+        opacity: 0;
     }
 }

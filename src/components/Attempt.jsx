@@ -9,7 +9,6 @@ const Attempt = () => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
     const [code, setCode] = useState('');
-    // const [userCode, setUserCode] = useState('');
     const [language, setLanguage] = useState('C++');
     const [theme, setTheme] = useState('vs-dark');
     const [runResult, setRunResult] = useState(null);
@@ -26,7 +25,6 @@ const Attempt = () => {
                 const response = await axios.get(`http://localhost:8080/api/problems/attempt/${id}`);
                 setProblem(response.data);
 
-                // Set the initial boilerplate code for the selected language
                 const languageMappingArray = response.data.problemLanguageMapping;
                 let languageMapping = languageMappingArray.find(
                     (mapping) => mapping.language === language
@@ -36,7 +34,6 @@ const Attempt = () => {
                     setCode(languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
                 }
 
-                // Initialize status indicators to orange
                 setStatusIndicators(Array(response.data.sampleTestCases.length).fill('orange'));
             } catch (error) {
                 console.error('Error fetching problem:', error);
@@ -46,13 +43,11 @@ const Attempt = () => {
         fetchProblem();
     }, [id, language]);
 
-    // Handle code editor changes
     const handleEditorChange = (value) => {
         console.log(value);
         setCode(value);
     };
 
-    // Handle language change
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
 
@@ -64,18 +59,14 @@ const Attempt = () => {
         }
     };
 
-    // Handle theme change
     const handleThemeChange = (e) => {
         setTheme(e.target.value);
     };
 
-    // Handle Run button click
-
     const handleRunCode = async () => {
-        setLoading(true); // Start loader
+        setLoading(true);
         try {
             console.log(code);
-            // Directly use code variable instead of userCode state
             const response = await axios.post(`http://localhost:8080/api/submissions/${id}/run`, { userCode: code, language });
             console.log(response.data);
             setRunResult(response.data);
@@ -83,31 +74,23 @@ const Attempt = () => {
         } catch (error) {
             console.error('Error running code:', error);
         } finally {
-            setLoading(false); // Stop loader
+            setLoading(false);
         }
     };
 
-
     const updateStatusIndicators = (results) => {
-        // Create a new array to hold the updated indicators
-        const updatedIndicators = [...statusIndicators]; // Use the spread operator to preserve the current state
+        const updatedIndicators = [...statusIndicators];
 
-        // Update only the first two entries in the results
         for (let i = 0; i < Math.min(2, results.length); i++) {
             updatedIndicators[i] = results[i].success ? 'green' : 'red';
         }
 
-        // Update the status indicators state
         setStatusIndicators(updatedIndicators);
     };
 
-
-
-    // Handle Submit button click
     const handleSubmitCode = async () => {
         setLoading(true);
         try {
-            // setUserCode(code);
             const response = await axios.post(`http://localhost:8080/api/submissions/${id}/submit`, { userCode: code, language });
             updateStatusIndicators(response.data.results);
             setSubmitResult(response.data);
@@ -116,20 +99,22 @@ const Attempt = () => {
             setTotalCases(cases);
 
             let results = response.data.results;
-            let cnt = 0.
-            results.map((result) => {
+            let cnt = 0;
+            results.forEach((result) => {
                 if (result.success) {
                     cnt++;
                 }
-            })
+            });
 
-            console.log(cases);
-            console.log(cnt);
+            console.log(results);
 
             setTestCasesPassed(cnt);
 
-            if (cases == cnt) {
+            if (cases === cnt) {
                 setCongratulations(true);
+                setTimeout(() => {
+                    setCongratulations(false);
+                }, 1000); // Show for 1 second
             }
         } catch (error) {
             console.error('Error submitting code:', error);
@@ -142,11 +127,12 @@ const Attempt = () => {
         <div className="container mt-4">
             {congratulations && (
                 <div className="congratulations-animation">
-                    <h2>🎉 Congratulations! You passed all test cases! 🎉</h2>
+                    <h2 className="congratulations-banner">
+                        🎉 Congratulations! You passed all test cases! 🎉
+                    </h2>
                 </div>
             )}
             <div className="row">
-                {/* Problem details card (Left side) */}
                 <div className="col-md-6 left-side">
                     <div className="card">
                         <div className="card-body">
@@ -158,7 +144,6 @@ const Attempt = () => {
                                     <div key={idx} className="test-case mb-3">
                                         <strong>Input:</strong> <pre>{testCase.input}</pre>
                                         <strong>Output:</strong> <pre>{testCase.output}</pre>
-                                        {/* Status indicator */}
                                     </div>
                                 ))}
                             </div>
@@ -166,7 +151,6 @@ const Attempt = () => {
                     </div>
                 </div>
 
-                {/* Code editor and sample input/output (Right side) */}
                 <div className="col-md-6 right-side">
                     <div className="editor-container">
                         <div className="editor-header mb-3">
@@ -200,13 +184,10 @@ const Attempt = () => {
                             }}
                         />
 
-                        {/* Section for sample inputs and outputs */}
                         <div className="sample-io-section mt-4">
                             <div className="io-block">
                                 <h5>Sample Input 1</h5>
-                                <div className="indicator"
-                                    style={{ backgroundColor: statusIndicators[0] }} // Use index 0 for the first case
-                                ></div>
+                                <div className="indicator" style={{ backgroundColor: statusIndicators[0] }}></div>
                                 <pre>{problem?.sampleTestCases[0]?.input}</pre>
                                 <h5>Sample Output 1</h5>
                                 <pre>{problem?.sampleTestCases[0]?.output}</pre>
@@ -214,17 +195,13 @@ const Attempt = () => {
 
                             <div className="io-block">
                                 <h5>Sample Input 2</h5>
-                                <div className="indicator"
-                                    style={{ backgroundColor: statusIndicators[1] }} // Use index 1 for the second case
-                                ></div>
+                                <div className="indicator" style={{ backgroundColor: statusIndicators[1] }}></div>
                                 <pre>{problem?.sampleTestCases[1]?.input}</pre>
                                 <h5>Sample Output 2</h5>
                                 <pre>{problem?.sampleTestCases[1]?.output}</pre>
                             </div>
                         </div>
 
-
-                        {/* Run and Submit buttons */}
                         <div className="action-buttons mt-4">
                             <button className="btn btn-primary mr-2" onClick={handleRunCode} disabled={loading}>
                                 {loading ? 'Running...' : '▶ Run'}
@@ -234,7 +211,6 @@ const Attempt = () => {
                             </button>
                         </div>
 
-                        {/* Display results */}
                         {runResult && (
                             <div className="run-result mt-4">
                                 <h5>Run Result:</h5>
@@ -245,7 +221,34 @@ const Attempt = () => {
                         {submitResult && (
                             <div className="submit-result mt-4">
                                 <h5>Submit Result:</h5>
-                                <pre>{JSON.stringify(submitResult, null, 2)}</pre>
+                                <div className="row">
+                                    {submitResult.results.map((result, index) => (
+                                        <div className="col-md-6" key={index}>
+                                            <div className="card mb-3">
+                                                <div className="card-body">
+                                                    <h6 className="card-title">Test Case {index + 1}</h6>
+                                                    <p><strong>Input:</strong> <pre>{result.input}</pre></p>
+                                                    <p><strong>Expected Output:</strong> <pre>{result.expected_output}</pre></p>
+                                                    <p><strong>Your Output:</strong> <pre>{atob(result.actual_output)}</pre></p>
+                                                    <p>
+                                                        <strong>Status:</strong>
+                                                        {result.success ? (
+                                                            <span className="text-success">Accepted</span>
+                                                        ) : result.status === 'Compilation Error' ? (
+                                                            <span className="text-danger">Compilation Error</span>
+                                                        ) : result.status === 'Wrong Answer' ? (
+                                                            <span className="text-warning">Wrong Answer</span>
+                                                        ) : result.status === 'Time Limit Exceeded' ? (
+                                                            <span className="text-warning">Time Limit Exceeded</span>
+                                                        ) : (
+                                                            <span>{result.status}</span>
+                                                        )}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
