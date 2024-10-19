@@ -19,8 +19,9 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
                 : { username, email, password };
 
             // API call for login or registration
+            let HOST = "https://coding-platform-primary-backend.onrender.com";
             const response = await axios.post(
-                `http://localhost:8080/api/user/${isLogin ? 'login' : 'register'}`,
+                `${HOST}/api/user/${isLogin ? 'login' : 'register'}`,
                 payload
             );
 

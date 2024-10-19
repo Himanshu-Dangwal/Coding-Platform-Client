@@ -11,7 +11,8 @@ const Problem = () => {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/problems/${id}`);
+                let HOST = "https://coding-platform-primary-backend.onrender.com";
+                const response = await axios.get(`${HOST}/api/problems/${id}`);
                 setProblem(response.data);
             } catch (error) {
                 console.error('Error fetching problem', error);

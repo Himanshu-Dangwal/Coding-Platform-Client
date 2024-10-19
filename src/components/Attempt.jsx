@@ -22,7 +22,8 @@ const Attempt = () => {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/problems/attempt/${id}`);
+                let HOST = "https://coding-platform-primary-backend.onrender.com";
+                const response = await axios.get(`${HOST}/api/problems/attempt/${id}`);
                 setProblem(response.data);
 
                 const languageMappingArray = response.data.problemLanguageMapping;
@@ -76,7 +77,8 @@ const Attempt = () => {
     const handleRunCode = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(`http://localhost:8080/api/submissions/${id}/run`, { userCode: code, language });
+            let HOST = "https://coding-platform-primary-backend.onrender.com";
+            const response = await axios.post(`${HOST}/api/submissions/${id}/run`, { userCode: code, language });
             setRunResult(response.data);
             updateStatusIndicators(response.data.results);
         } catch (error) {
@@ -97,7 +99,8 @@ const Attempt = () => {
     const handleSubmitCode = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(`http://localhost:8080/api/submissions/${id}/submit`, { userCode: code, language });
+            let HOST = "https://coding-platform-primary-backend.onrender.com";
+            const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
             updateStatusIndicators(response.data.results);
             setSubmitResult(response.data);
 
