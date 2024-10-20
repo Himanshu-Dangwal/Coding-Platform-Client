@@ -83,23 +83,48 @@ pre {
     width: 100%;
 }
 
-.extra-title {
+/* .extra-title {
     text-align: center;
     margin-bottom: 4%;
     margin-top: 2%;
     font-weight: bolder;
-    /* text-decoration: underline; */
-    background-color: #332e2e;
-    color: #FFFFFF;
-    /* Example with gold */
-    font-size: 50px;
-    padding: 10px;
-    border-radius: 5px;
-    /* Optional rounded corners */
+   
+background-color: #332e2e;
+color: #FFFFFF;
+
+font-size: 50px;
+padding: 10px;
+border-radius: 5px;
+
 }
 
+*/
+.extra-title {
+    text-align: center;
+    /* Center align the text */
+    margin: 20px 0;
+    /* Add top and bottom margin */
+    font-weight: bold;
+    /* Use bold font weight */
+    background-color: #f8f9fa;
+    /* Light background color for contrast */
+    color: #333;
+    /* Dark text color for readability */
+    font-size: 36px;
+    /* Slightly smaller font size for a cleaner look */
+    padding: 15px;
+    /* Add padding for spacing around the text */
+    border-radius: 5px;
+    /* Optional rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional shadow for depth */
+    border: 1px solid #ccc;
+    /* Optional border for structure */
+}
+
+
 .extra-text {
-    font-weight: bolder;
+    /* font-weight: bolder; */
     font-size: large;
 }
 

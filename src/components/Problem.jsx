@@ -23,6 +23,16 @@ const Problem = () => {
         fetchProblem();
     }, [id]);
 
+    // Function to render text with line breaks
+    const renderTextWithLineBreaks = (text) => {
+        return text.split('\n').map((line, index) => (
+            <span key={index}>
+                {line}
+                <br />
+            </span>
+        ));
+    };
+
     return (
         <div className="container mt-5">
             {problem ? (
@@ -30,15 +40,15 @@ const Problem = () => {
                     <div className="card shadow-lg p-4 mb-5 bg-white rounded">
                         <h2 className="card-title text-center mb-4">{problem.title}</h2>
                         <div className="card-body">
-                            <p className="card-text"><strong>Description:</strong> {problem.description}</p>
+                            <p className="card-text"><strong>Description:</strong> {renderTextWithLineBreaks(problem.description)}</p>
 
                             <h5 className="mt-4">Sample Test Cases:</h5>
                             <ul className="list-group list-group-flush">
                                 {problem.sampleTestCases.map((tc, index) => (
                                     <li key={index} className="list-group-item">
-                                        <strong>Input {index + 1}:</strong> <code>{tc.input}</code>
+                                        <strong>Input {index + 1}:<br></br></strong> <code>{renderTextWithLineBreaks(tc.input)}</code>
                                         <br />
-                                        <strong>Expected Output {index + 1}:</strong> <code>{tc.output}</code>
+                                        <strong>Expected Output {index + 1}:<br></br></strong> <code>{renderTextWithLineBreaks(tc.output)}</code>
                                     </li>
                                 ))}
                             </ul>

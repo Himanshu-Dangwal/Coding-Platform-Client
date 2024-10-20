@@ -303,6 +303,14 @@ main();`
             setLoading(false);
         }
     };
+    const renderTextWithLineBreaks = (text) => {
+        return text.split('\n').map((line, index) => (
+            <span key={index}>
+                {line}
+                <br />
+            </span>
+        ));
+    };
 
     return (
         <div className="container mt-4">
@@ -318,7 +326,7 @@ main();`
                     <div className="card">
                         <div className="card-body">
                             <h3 className="card-title extra-title">{problem?.title}</h3>
-                            <p className="card-text extra-text">{problem?.description}</p>
+                            <p className="card-text extra-text">{renderTextWithLineBreaks(problem?.description)}</p>
                             <h5>Sample Test Cases</h5>
                             <div className="test-case-container">
                                 {problem?.sampleTestCases.map((testCase, idx) => (
