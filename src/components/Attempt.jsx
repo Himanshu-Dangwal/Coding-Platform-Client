@@ -271,10 +271,32 @@ main();`
         setLoading(true);
         try {
             // let HOST = process.env.REACT_APP_HOST;
-            let HOST = "https://coding-platform-primary-backend.onrender.com";
-            // let HOST = "http://localhost:8080"
 
-            const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
+            let HOST = "http://localhost:8080"
+
+
+            // let HOST = "https://coding-platform-primary-backend.onrender.com";
+            // const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
+
+            // let HOST = "https://coding-platform-primary-backend.onrender.com";
+            const token = localStorage.getItem('authToken'); // Make sure this key matches your storage key
+
+            // Prepare headers object
+            const headers = {
+                'Content-Type': 'application/json', // Set the content type
+            };
+
+            // If the token exists, add it to the headers
+            if (token) {
+                headers.Authorization = `Bearer ${token}`; // Include the token in the Authorization header
+            }
+
+            const response = await axios.post(
+                `${HOST}/api/submissions/${id}/submit`,
+                { userCode: code, language },
+                { headers } // Pass the headers in the request
+            );
+
             updateStatusIndicators(response.data.results);
             setSubmitResult(response.data);
 
@@ -304,6 +326,9 @@ main();`
         }
     };
     const renderTextWithLineBreaks = (text) => {
+        if (!text) return null;
+        console.log(problem)
+        console.log(text)
         return text.split('\n').map((line, index) => (
             <span key={index}>
                 {line}
