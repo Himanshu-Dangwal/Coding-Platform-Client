@@ -272,15 +272,15 @@ main();`
         try {
             // let HOST = process.env.REACT_APP_HOST;
 
-            let HOST = "http://localhost:8080"
+            // let HOST = "http://localhost:8080"
 
 
-            // let HOST = "https://coding-platform-primary-backend.onrender.com";
+            let HOST = "https://coding-platform-primary-backend.onrender.com";
             // const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
 
             // let HOST = "https://coding-platform-primary-backend.onrender.com";
-            const token = localStorage.getItem('authToken'); // Make sure this key matches your storage key
-
+            const token = localStorage.getItem('token'); // Make sure this key matches your storage key
+            console
             // Prepare headers object
             const headers = {
                 'Content-Type': 'application/json', // Set the content type
