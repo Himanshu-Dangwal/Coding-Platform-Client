@@ -339,7 +339,7 @@ main();`
                                 <label htmlFor="language-select">Language:</label>
                                 <select id="language-select" className="form-control" value={language} onChange={handleLanguageChange}>
                                     <option value="C++">C++</option>
-                                    <option value="Javascript">JavaScript</option>
+                                    {/* <option value="Javascript">JavaScript</option> */}
                                     <option value="Python">Python</option>
                                     <option value="Java">Java</option>
                                 </select>
