@@ -11,7 +11,7 @@ const Problem = () => {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                let HOST = "https://coding-platform-primary-backend.onrender.com";
+                let HOST = import.meta.env.VITE_HOST;
                 // let HOST = process.env.REACT_APP_HOST;
                 const response = await axios.get(`${HOST}/api/problems/${id}`);
                 setProblem(response.data);

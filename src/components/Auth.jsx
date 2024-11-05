@@ -20,7 +20,7 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
 
             // API call for login or registration
             // let HOST = process.env.REACT_APP_HOST;
-            let HOST = "https://coding-platform-primary-backend.onrender.com";
+            let HOST = import.meta.env.VITE_HOST;
             const response = await axios.post(
                 `${HOST}/api/user/${isLogin ? 'login' : 'register'}`,
                 payload

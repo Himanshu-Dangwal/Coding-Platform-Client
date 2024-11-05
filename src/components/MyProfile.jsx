@@ -21,7 +21,7 @@ const MyProfile = () => {
             try {
                 // Fetch user profile
                 // let HOST = process.env.REACT_APP_HOST;
-                let HOST = "https://coding-platform-primary-backend.onrender.com";
+                let HOST = import.meta.env.VITE_HOST;
 
                 const profileResponse = await axios.get(`${HOST}/api/user/profile`, {
                     headers: {

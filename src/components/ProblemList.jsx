@@ -11,7 +11,7 @@ const ProblemList = () => {
             try {
                 // let HOST = process.env.REACT_APP_HOST || "http://localhost:8080";
                 // console.log(HOST);
-                let HOST = "https://coding-platform-primary-backend.onrender.com";
+                let HOST = import.meta.env.VITE_HOST;
                 const response = await axios.get(`${HOST}/api/problems`);
                 setProblems(response.data);
             } catch (error) {

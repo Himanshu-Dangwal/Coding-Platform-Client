@@ -177,7 +177,7 @@ main();`
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                let HOST = "https://coding-platform-primary-backend.onrender.com";
+                let HOST = import.meta.env.VITE_HOST;
                 // let HOST = process.env.REACT_APP_HOST;
                 // let HOST = "http://localhost:8080"
 
@@ -245,7 +245,7 @@ main();`
         setLoading(true);
         try {
             // let HOST = process.env.REACT_APP_HOST;
-            let HOST = "https://coding-platform-primary-backend.onrender.com";
+            let HOST = import.meta.env.VITE_HOST;
             // let HOST = "http://localhost:8080"
             console.log(code)
             console.log(language)
@@ -275,10 +275,9 @@ main();`
             // let HOST = "http://localhost:8080"
 
 
-            let HOST = "https://coding-platform-primary-backend.onrender.com";
+            let HOST = import.meta.env.VITE_HOST;
             // const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
 
-            // let HOST = "https://coding-platform-primary-backend.onrender.com";
             const token = localStorage.getItem('token'); // Make sure this key matches your storage key
             console
             // Prepare headers object

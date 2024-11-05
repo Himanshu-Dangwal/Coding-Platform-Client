@@ -16,6 +16,7 @@ function App() {
 
   // Check if the user is logged in when the component mounts
   useEffect(() => {
+    // console.log(import.meta.env.VITE_HOST);
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
