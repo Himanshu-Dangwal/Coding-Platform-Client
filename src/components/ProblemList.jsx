@@ -24,7 +24,7 @@ const ProblemList = () => {
 
     return (
         <div className="container mt-4">
-            <h2>Problems</h2>
+            <h2>Problems Here</h2>
             <div className="row">
                 {problems.map((problem) => (
                     <div key={problem._id} className="col-md-6 mb-4">
