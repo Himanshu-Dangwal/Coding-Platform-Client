@@ -22,23 +22,28 @@ const LandingPage = () => {
                 <div className="feature-list">
                     <div className="feature-item">
                         <i className="fas fa-code"></i>
-                        <h3>Practice Problems</h3>
-                        <p>Access a wide variety of coding problems to improve your skills.</p>
+                        <h3>Learn Algorithms</h3>
+                        <p>Your one-stop platform to master algorithms and compete effectively.</p>
                     </div>
                     <div className="feature-item">
                         <i className="fas fa-terminal"></i>
-                        <h3>Real-Time Code Execution</h3>
-                        <p>Submit your code and see results instantly with our powerful execution engine.</p>
+                        <h3>Interview Ready</h3>
+                        <p>Perfect platform to prepare for interviews at top companies.</p>
                     </div>
                     <div className="feature-item">
                         <i className="fas fa-users"></i>
-                        <h3>Learn from Others</h3>
-                        <p>Review solutions from other users and enhance your learning with peer-to-peer knowledge sharing.</p>
+                        <h3>Crack Online Assessments</h3>
+                        <p>Solve questions step-by-step and ace online assessments.</p>
                     </div>
                     <div className="feature-item">
                         <i className="fas fa-comments"></i>
-                        <h3>Community Support</h3>
-                        <p>Join a community of like-minded coders for help and collaboration on challenging problems.</p>
+                        <h3>Incremental Learning</h3>
+                        <p>Follow a well-designed learning plan for continuous growth.</p>
+                    </div>
+                    <div className="feature-item">
+                        <i className="fas fa-comments"></i>
+                        <h3>Topic-wise Practice</h3>
+                        <p>Practice topic-wise questions with a structured learning curve.</p>
                     </div>
                 </div>
             </section>
