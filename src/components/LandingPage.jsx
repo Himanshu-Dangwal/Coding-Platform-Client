@@ -8,7 +8,7 @@ const LandingPage = () => {
             {/* Hero Section */}
             <header className="landing-header">
                 <div className="hero-content">
-                    <h1 className="animate-text">Welcome to CodePlatform</h1>
+                    <h1 className="animate-text">Welcome to CodeBuddy</h1>
                     <p className="animate-subtext">Your one-stop solution for coding challenges and practice.</p>
                     <Link to="/register" className="btn btn-info btn-animated">
                         Get Started
@@ -48,18 +48,18 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Parallax Scrolling Section */}
+            {/* Parallax Scrolling Section
             <section className="parallax-section">
                 <div className="parallax-content">
                     <h2>Take Your Coding Skills to the Next Level</h2>
                     <p>CodePlatform provides the resources, challenges, and support you need to excel as a coder.</p>
                     <Link to="/contact-me" className="btn btn-primary btn-animated">Contact Us</Link>
                 </div>
-            </section>
+            </section> */}
 
 
             {/* Testimonials Section */}
-            <section className="testimonials">
+            {/* <section className="testimonials">
                 <h2>What Our Users Say</h2>
                 <div className="testimonial-list">
                     <div className="testimonial-item">
@@ -75,12 +75,17 @@ const LandingPage = () => {
                         <span>- Sam K.</span>
                     </div>
                 </div>
+            </section> */}
+
+            <section className='myProfile'>
+                <p>I have been solving problems from 2019, and love to design new and effective algortihms. In my journey of problem solving I have always find out that there is no alternative to hard work and being consistent. But equally important is to have a dedicated guided path to work upon and grow exponentially.</p>
+                <a href='https://portfolio.dangwalhimanshu.com' target='_blank'><button className='btn btn-info btn-animated'>My Profile</button></a>
             </section>
 
             {/* Footer Section */}
             <footer className="landing-footer">
                 <p>© 2024 Code Buddy. All Rights Reserved.</p>
-                <Link to="/register" className="btn btn-secondary btn-animated">
+                <Link to="/register" className="btn btn-primary btn-animated">
                     Join Now
                 </Link>
             </footer>
