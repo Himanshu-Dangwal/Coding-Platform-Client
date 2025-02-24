@@ -1,0 +1,36 @@
+.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --card-bg: #2d2d2d;
+    --primary-color: #4a9dff;
+    --hover-color: #6ab0ff;
+}
+
+.light-mode {
+    --bg-color: #ffffff;
+    --text-color: #2d2d2d;
+    --card-bg: #f8f9fa;
+    --primary-color: #0d6efd;
+    --hover-color: #0b5ed7;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.navbar,
+.card {
+    background-color: var(--card-bg) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+}

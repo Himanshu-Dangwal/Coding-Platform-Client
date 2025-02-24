@@ -5,12 +5,12 @@ import Editor from '@monaco-editor/react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import '../styles/Attempt.css'; // Import the custom CSS
 
-const Attempt = () => {
+const Attempt = ({ darkMode }) => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
     const [code, setCode] = useState('');
     const [language, setLanguage] = useState('C++');
-    const [theme, setTheme] = useState('vs-dark');
+    const [theme, setTheme] = useState(darkMode ? 'vs-dark' : 'vs-light');
     const [runResult, setRunResult] = useState(null);
     const [submitResult, setSubmitResult] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -43,12 +43,13 @@ main();`
     };
 
     useEffect(() => {
+        setTheme(darkMode ? 'vs-dark' : 'vs-light')
+    }, [darkMode]);
+
+    useEffect(() => {
         const fetchProblem = async () => {
             try {
                 let HOST = import.meta.env.VITE_HOST;
-                // let HOST = process.env.REACT_APP_HOST;
-                // let HOST = "http://localhost:8080"
-
                 const response = await axios.get(`${HOST}/api/problems/attempt/${id}`);
                 setProblem(response.data);
 
@@ -112,11 +113,9 @@ main();`
     const handleRunCode = async () => {
         setLoading(true);
         try {
-            // let HOST = process.env.REACT_APP_HOST;
             let HOST = import.meta.env.VITE_HOST;
-            // let HOST = "http://localhost:8080"
-            console.log(code)
-            console.log(language)
+            console.log(code);
+            console.log(language);
             const response = await axios.post(`${HOST}/api/submissions/${id}/run`, { userCode: code, language });
             setRunResult(response.data);
             updateStatusIndicators(response.data.results);
@@ -138,30 +137,20 @@ main();`
     const handleSubmitCode = async () => {
         setLoading(true);
         try {
-            // let HOST = process.env.REACT_APP_HOST;
-
-            // let HOST = "http://localhost:8080"
-
-
             let HOST = import.meta.env.VITE_HOST;
-            // const response = await axios.post(`${HOST}/api/submissions/${id}/submit`, { userCode: code, language });
-
-            const token = localStorage.getItem('token'); // Make sure this key matches your storage key
-            console
-            // Prepare headers object
+            const token = localStorage.getItem('token');
             const headers = {
-                'Content-Type': 'application/json', // Set the content type
+                'Content-Type': 'application/json',
             };
 
-            // If the token exists, add it to the headers
             if (token) {
-                headers.Authorization = `Bearer ${token}`; // Include the token in the Authorization header
+                headers.Authorization = `Bearer ${token}`;
             }
 
             const response = await axios.post(
                 `${HOST}/api/submissions/${id}/submit`,
                 { userCode: code, language },
-                { headers } // Pass the headers in the request
+                { headers }
             );
 
             updateStatusIndicators(response.data.results);
@@ -170,9 +159,8 @@ main();`
             let cases = response.data.results.length;
             setTotalCases(cases);
 
-            let results = response.data.results;
             let cnt = 0;
-            results.forEach((result) => {
+            response.data.results.forEach((result) => {
                 if (result.success) {
                     cnt++;
                 }
@@ -192,10 +180,9 @@ main();`
             setLoading(false);
         }
     };
+
     const renderTextWithLineBreaks = (text) => {
         if (!text) return null;
-        console.log(problem)
-        console.log(text)
         return text.split('\n').map((line, index) => (
             <span key={index}>
                 {line}
@@ -205,7 +192,7 @@ main();`
     };
 
     return (
-        <div className="container mt-4">
+        <div className={`container mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
             {congratulations && (
                 <div className="congratulations-animation">
                     <h2 className="congratulations-banner">
@@ -215,16 +202,18 @@ main();`
             )}
             <div className="row">
                 <div className="col-md-6 left-side">
-                    <div className="card">
+                    <div className={`card ${darkMode ? 'bg-secondary text-white' : ''}`}>
                         <div className="card-body">
-                            <h3 className="card-title extra-title">{problem?.title}</h3>
+                            <h3 className={`card-title text-center ${darkMode ? 'text-white' : 'text-dark'}`}>{problem?.title}</h3>
                             <p className="card-text extra-text">{renderTextWithLineBreaks(problem?.description)}</p>
                             <h5>Sample Test Cases</h5>
-                            <div className="test-case-container">
+                            <div className={`test-case-container ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                                 {problem?.sampleTestCases.map((testCase, idx) => (
                                     <div key={idx} className="test-case mb-3">
-                                        <strong>Input:</strong> <pre>{testCase.input}</pre>
-                                        <strong>Output:</strong> <pre>{testCase.output}</pre>
+                                        <strong>Input:</strong>
+                                        <pre className={darkMode ? 'bg-dark text-white p-2' : ''}>{testCase.input}</pre>
+                                        <strong>Output:</strong>
+                                        <pre className={darkMode ? 'bg-dark text-white p-2' : ''}>{testCase.output}</pre>
                                     </div>
                                 ))}
                             </div>
@@ -232,26 +221,37 @@ main();`
                     </div>
                 </div>
 
-                <div className="col-md-6 right-side">
-                    <div className="editor-container">
+                <div className={`col-md-6 right-side ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+                    <div className={`editor-container ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                         <div className="editor-header mb-3">
                             <div className="form-group">
                                 <label htmlFor="language-select">Language:</label>
-                                <select id="language-select" className="form-control" value={language} onChange={handleLanguageChange}>
+                                <select
+                                    id="language-select"
+                                    className="form-control"
+                                    value={language}
+                                    onChange={handleLanguageChange}
+                                >
                                     <option value="C++">C++</option>
-                                    {/* <option value="Javascript">JavaScript</option> */}
                                     <option value="Python">Python</option>
                                     <option value="Java">Java</option>
                                 </select>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="theme-select">Theme:</label>
-                                <select id="theme-select" className="form-control" value={theme} onChange={handleThemeChange}>
+                                <select
+                                    id="theme-select"
+                                    className="form-control"
+                                    value={theme}
+                                    onChange={handleThemeChange}
+                                >
                                     <option value="vs-dark">Dark</option>
                                     <option value="light">Light</option>
                                 </select>
                             </div>
-                            <button className="btn btn-warning" onClick={handleSaveCode}>💾 Save</button>
+                            <button className="btn btn-warning" onClick={handleSaveCode}>
+                                💾 Save
+                            </button>
                         </div>
 
                         <Editor
@@ -266,23 +266,32 @@ main();`
                             }}
                         />
 
-                        <div className="sample-io-section mt-4">
-                            <div className="io-block">
+                        <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+                            <div className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                                 <h5>Sample Input 1</h5>
                                 <div className="indicator" style={{ backgroundColor: statusIndicators[0] }}></div>
-                                <pre>{problem?.sampleTestCases[0]?.input}</pre>
+                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                    {problem?.sampleTestCases[0]?.input}
+                                </pre>
                                 <h5>Sample Output 1</h5>
-                                <pre>{problem?.sampleTestCases[0]?.output}</pre>
+                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                    {problem?.sampleTestCases[0]?.output}
+                                </pre>
                             </div>
 
-                            <div className="io-block">
+                            <div className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                                 <h5>Sample Input 2</h5>
                                 <div className="indicator" style={{ backgroundColor: statusIndicators[1] }}></div>
-                                <pre>{problem?.sampleTestCases[1]?.input}</pre>
+                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                    {problem?.sampleTestCases[1]?.input}
+                                </pre>
                                 <h5>Sample Output 2</h5>
-                                <pre>{problem?.sampleTestCases[1]?.output}</pre>
+                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                    {problem?.sampleTestCases[1]?.output}
+                                </pre>
                             </div>
                         </div>
+
 
                         <div className="action-buttons mt-4">
                             <button className="btn btn-primary mr-2" onClick={handleRunCode} disabled={loading}>
@@ -309,10 +318,14 @@ main();`
                                             <div className="card mb-3">
                                                 <div className="card-body">
                                                     <h6 className="card-title">Test Case {index + 1}</h6>
-                                                    <p className="card-text">Success: {result.success ? '✅' : '❌'}</p>
+                                                    <p className="card-text">
+                                                        Success: {result.success ? '✅' : '❌'}
+                                                    </p>
                                                     <p className="card-text">Input: {result.input}</p>
                                                     <p className="card-text">Expected: {result.expected_output}</p>
-                                                    <p className="card-text">Received: {atob(result.actual_output)}</p>
+                                                    <p className="card-text">
+                                                        Received: {atob(result.actual_output)}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>

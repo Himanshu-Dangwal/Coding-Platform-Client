@@ -1,10 +1,9 @@
-// components/Problem.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Problem = () => {
+const Problem = ({ darkMode }) => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
 
@@ -12,7 +11,6 @@ const Problem = () => {
         const fetchProblem = async () => {
             try {
                 let HOST = import.meta.env.VITE_HOST;
-                // let HOST = process.env.REACT_APP_HOST;
                 const response = await axios.get(`${HOST}/api/problems/${id}`);
                 setProblem(response.data);
             } catch (error) {
@@ -34,15 +32,15 @@ const Problem = () => {
     };
 
     return (
-        <div className="container mt-5">
+        <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
             {problem ? (
                 <>
                     <div className="card shadow-lg p-4 mb-5 bg-white rounded">
-                        <h2 className="card-title text-center mb-4">{problem.title}</h2>
-                        <div className="card-body">
-                            <p className="card-text"><strong>Description:</strong> {renderTextWithLineBreaks(problem.description)}</p>
+                        <h2 className={`card-title text-center mb-4 text-${darkMode ? 'light' : 'dark'}`}>{problem.title}</h2>
+                        <div className={`card-body bg-${darkMode ? 'dark' : 'light'} text-${darkMode ? 'light' : 'dark'}`}>
+                            <p className={`card-text bg-${darkMode ? 'dark' : 'light'} text-${darkMode ? 'light' : 'dark'}`}><strong>Description:</strong> {renderTextWithLineBreaks(problem.description)}</p>
 
-                            <h5 className="mt-4">Sample Test Cases:</h5>
+                            <h5 className={`mt-4 bg-${darkMode ? 'dark' : 'light'} text-${darkMode ? 'light' : 'dark'}`}>Sample Test Cases:</h5>
                             <ul className="list-group list-group-flush">
                                 {problem.sampleTestCases.map((tc, index) => (
                                     <li key={index} className="list-group-item">
