@@ -17,6 +17,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
 
+
   // Add dark mode class to body
   useEffect(() => {
     if (darkMode) {
@@ -39,7 +40,7 @@ function App() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.clear();
     setIsLoggedIn(false);
     alert('Logout Successful');
   };
@@ -59,7 +60,7 @@ function App() {
           <Route path="/register" element={<Auth isLogin={false} darkMode={darkMode} />} />
           <Route path="/problems" element={<ProblemList darkMode={darkMode} />} />
           <Route path="/problems/:id" element={<Problem darkMode={darkMode} />} />
-          <Route path="/attempt/:id" element={<Attempt darkMode={darkMode} />} />
+          <Route path="/attempt/:id" element={<Attempt isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} darkMode={darkMode} />} />
           <Route path="/contact-me" element={<ContactMe darkMode={darkMode} />} />
           <Route path="/profile" element={<MyProfile darkMode={darkMode} />} />
         </Routes>

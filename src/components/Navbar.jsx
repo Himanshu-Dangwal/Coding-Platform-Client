@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ isLoggedIn, handleLogout, darkMode, toggleDarkMode }) => {
     const navbarToggle = useRef(null);
     const navbarCollapse = useRef(null);
+    const navigate = useNavigate();
 
     const handleToggleDarkModeButtonClick = () => {
         if (navbarCollapse.current.classList.contains('show')) {
@@ -17,6 +18,7 @@ const Navbar = ({ isLoggedIn, handleLogout, darkMode, toggleDarkMode }) => {
             navbarToggle.current.click();
         }
         handleLogout();
+        navigate('/');
     }
 
     const handleLinkClick = () => {

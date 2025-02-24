@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Editor from '@monaco-editor/react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import '../styles/Attempt.css'; // Import the custom CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/Attempt.css';
 
-const Attempt = ({ darkMode }) => {
+const languageMap = {
+    "C++": "cpp",
+    "Python": "python",
+    "Java": "java",
+    "Javascript": "javascript"
+};
+
+const Attempt = ({ darkMode, isLoggedIn, setIsLoggedIn }) => {
     const { id } = useParams();
     const [problem, setProblem] = useState(null);
     const [code, setCode] = useState('');
     const [language, setLanguage] = useState('C++');
-    const [theme, setTheme] = useState(darkMode ? 'vs-dark' : 'vs-light');
+    const [theme, setTheme] = useState(darkMode ? 'vs-dark' : 'vs');
     const [runResult, setRunResult] = useState(null);
     const [submitResult, setSubmitResult] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -18,8 +26,8 @@ const Attempt = ({ darkMode }) => {
     const [congratulations, setCongratulations] = useState(false);
     const [totalTestCases, setTotalCases] = useState(0);
     const [testCasesPassed, setTestCasesPassed] = useState(0);
+    const editorRef = useRef(null);
 
-    // Define default boilerplate code for each language
     const defaultBoilerplateCode = {
         "C++": `#include<bits/stdc++.h>
 using namespace std;
@@ -43,7 +51,7 @@ main();`
     };
 
     useEffect(() => {
-        setTheme(darkMode ? 'vs-dark' : 'vs-light')
+        setTheme(darkMode ? 'vs-dark' : 'vs');
     }, [darkMode]);
 
     useEffect(() => {
@@ -53,19 +61,20 @@ main();`
                 const response = await axios.get(`${HOST}/api/problems/attempt/${id}`);
                 setProblem(response.data);
 
-                // Get language mapping for the default language
-                const languageMappingArray = response.data.problemLanguageMapping;
-                let languageMapping = languageMappingArray.find(
-                    (mapping) => mapping.language === language
-                );
-
-                // Set code based on language mapping or default
-                if (languageMapping) {
-                    const storedCode = localStorage.getItem(`problem_${id}_${language}`);
-                    setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+                if (localStorage.getItem(`problem_${response.data._id}_${language}`)) {
+                    setCode(localStorage.getItem(`problem_${response.data._id}_${language}`));
                 } else {
-                    // Set default boilerplate code if no mapping found
-                    setCode(defaultBoilerplateCode[language]);
+                    const languageMappingArray = response.data.problemLanguageMapping;
+                    let languageMapping = languageMappingArray.find(
+                        (mapping) => mapping.language === language
+                    );
+
+                    if (languageMapping) {
+                        const storedCode = localStorage.getItem(`problem_${id}_${language}`);
+                        setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+                    } else {
+                        setCode(defaultBoilerplateCode[language]);
+                    }
                 }
 
                 setStatusIndicators(Array(response.data.sampleTestCases.length).fill('orange'));
@@ -79,24 +88,26 @@ main();`
 
     const handleEditorChange = (value) => {
         setCode(value);
-        console.log(value);
     };
 
     const handleLanguageChange = (e) => {
+        handleSaveCode(false);
         const selectedLanguage = e.target.value;
         setLanguage(selectedLanguage);
-        console.log(selectedLanguage);
 
-        const languageMapping = problem?.problemLanguageMapping.find(
-            (mapping) => mapping.language.toLowerCase() === selectedLanguage.toLowerCase()
-        );
-
-        if (languageMapping) {
-            const storedCode = localStorage.getItem(`problem_${id}_${selectedLanguage}`);
-            setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+        if (localStorage.getItem(`problem_${problem._id}_${selectedLanguage}`)) {
+            setCode(localStorage.getItem(`problem_${problem._id}_${selectedLanguage}`));
         } else {
-            // Set default boilerplate code if no mapping found
-            setCode(defaultBoilerplateCode[selectedLanguage]);
+            const languageMapping = problem?.problemLanguageMapping.find(
+                (mapping) => mapping.language.toLowerCase() === selectedLanguage.toLowerCase()
+            );
+
+            if (languageMapping) {
+                const storedCode = localStorage.getItem(`problem_${id}_${selectedLanguage}`);
+                setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+            } else {
+                setCode(defaultBoilerplateCode[selectedLanguage]);
+            }
         }
     };
 
@@ -104,18 +115,16 @@ main();`
         setTheme(e.target.value);
     };
 
-    // Save code to localStorage
-    const handleSaveCode = () => {
+    const handleSaveCode = (savePressed) => {
         localStorage.setItem(`problem_${id}_${language}`, code);
-        alert('Code saved successfully!');
+        if (savePressed) alert('Code saved successfully!');
     };
 
     const handleRunCode = async () => {
+        handleSaveCode(false);
         setLoading(true);
         try {
             let HOST = import.meta.env.VITE_HOST;
-            console.log(code);
-            console.log(language);
             const response = await axios.post(`${HOST}/api/submissions/${id}/run`, { userCode: code, language });
             setRunResult(response.data);
             updateStatusIndicators(response.data.results);
@@ -135,55 +144,113 @@ main();`
     };
 
     const handleSubmitCode = async () => {
-        setLoading(true);
-        try {
-            let HOST = import.meta.env.VITE_HOST;
-            const token = localStorage.getItem('token');
-            const headers = {
-                'Content-Type': 'application/json',
-            };
+        handleSaveCode(false);
+        if (isLoggedIn) {
+            setLoading(true);
+            try {
+                let HOST = import.meta.env.VITE_HOST;
+                const token = localStorage.getItem('token');
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...(token && { Authorization: `Bearer ${token}` })
+                };
 
-            if (token) {
-                headers.Authorization = `Bearer ${token}`;
-            }
+                const response = await axios.post(
+                    `${HOST}/api/submissions/${id}/submit`,
+                    { userCode: code, language },
+                    { headers }
+                );
 
-            const response = await axios.post(
-                `${HOST}/api/submissions/${id}/submit`,
-                { userCode: code, language },
-                { headers }
-            );
+                updateStatusIndicators(response.data.results);
+                setSubmitResult(response.data);
 
-            updateStatusIndicators(response.data.results);
-            setSubmitResult(response.data);
+                const cases = response.data.results.length;
+                setTotalCases(cases);
 
-            let cases = response.data.results.length;
-            setTotalCases(cases);
+                const cnt = response.data.results.filter(result => result.success).length;
+                setTestCasesPassed(cnt);
 
-            let cnt = 0;
-            response.data.results.forEach((result) => {
-                if (result.success) {
-                    cnt++;
+                if (cases === cnt) {
+                    setCongratulations(true);
+                    setTimeout(() => setCongratulations(false), 1000);
                 }
-            });
-
-            setTestCasesPassed(cnt);
-
-            if (cases === cnt) {
-                setCongratulations(true);
-                setTimeout(() => {
-                    setCongratulations(false);
-                }, 1000); // Show for 1 second
+            } catch (error) {
+                console.error('Error submitting code:', error);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error('Error submitting code:', error);
-        } finally {
-            setLoading(false);
+        } else {
+            alert("You need to login first to submit the code");
+            localStorage.setItem(`problem_${id}_${language}`, code);
         }
     };
 
+    const editorOptions = {
+        minimap: { enabled: true },
+        fontSize: 16,
+        lineNumbers: 'on',
+        roundedSelection: false,
+        scrollBeyondLastLine: false,
+        readOnly: false,
+        folding: true,
+        automaticLayout: true,
+        autoClosingBrackets: 'always',
+        autoClosingQuotes: 'always',
+        suggest: { quickSuggestions: true },
+        scrollbar: { vertical: 'auto', horizontal: 'auto' },
+        wordWrap: 'on',
+    };
+
+    const handleEditorMount = (editor, monaco) => {
+        editorRef.current = editor;
+        const editorNode = editor.getDomNode();
+
+        // Add resize observer to track editor height changes
+        const resizeObserver = new ResizeObserver(() => {
+            // Force update scroll position calculations
+            editor.layout();
+        });
+
+        // Handle wheel events with improved edge detection
+        editorNode.addEventListener('wheel', (event) => {
+            const scrollTop = editor.getScrollTop();
+            const scrollHeight = editor.getScrollHeight();
+            const editorHeight = editor.getLayoutInfo().height;
+            const delta = -event.deltaY;
+
+            // Check if editor is scrollable at all
+            const isScrollable = scrollHeight > editorHeight;
+            if (!isScrollable) {
+                event.stopPropagation();
+                return;
+            }
+
+            // Calculate potential new scroll position
+            const potentialScrollTop = scrollTop + delta;
+            const canScrollUp = potentialScrollTop > 0;
+            const canScrollDown = potentialScrollTop < scrollHeight - editorHeight;
+
+            // Check if we're at the boundaries
+            const atTop = scrollTop <= 0 && delta > 0;
+            const atBottom = scrollTop >= scrollHeight - editorHeight && delta < 0;
+
+            if ((atTop || atBottom) || (!canScrollUp && !canScrollDown)) {
+                // Allow page scroll when at boundaries
+                event.stopPropagation();
+                return;
+            }
+
+            // Otherwise handle editor scroll
+            event.preventDefault();
+            event.stopPropagation();
+            editor.setScrollTop(potentialScrollTop);
+        }, { passive: false });
+
+        resizeObserver.observe(editorNode);
+    };
+
     const renderTextWithLineBreaks = (text) => {
-        if (!text) return null;
-        return text.split('\n').map((line, index) => (
+        return text?.split('\n').map((line, index) => (
             <span key={index}>
                 {line}
                 <br />
@@ -204,16 +271,24 @@ main();`
                 <div className="col-md-6 left-side">
                     <div className={`card ${darkMode ? 'bg-secondary text-white' : ''}`}>
                         <div className="card-body">
-                            <h3 className={`card-title text-center ${darkMode ? 'text-white' : 'text-dark'}`}>{problem?.title}</h3>
-                            <p className="card-text extra-text">{renderTextWithLineBreaks(problem?.description)}</p>
+                            <h3 className={`card-title text-center ${darkMode ? 'text-white' : 'text-dark'}`}>
+                                {problem?.title}
+                            </h3>
+                            <p className="card-text extra-text">
+                                {renderTextWithLineBreaks(problem?.description)}
+                            </p>
                             <h5>Sample Test Cases</h5>
                             <div className={`test-case-container ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                                 {problem?.sampleTestCases.map((testCase, idx) => (
                                     <div key={idx} className="test-case mb-3">
                                         <strong>Input:</strong>
-                                        <pre className={darkMode ? 'bg-dark text-white p-2' : ''}>{testCase.input}</pre>
+                                        <pre className={darkMode ? 'bg-dark text-white p-2' : ''}>
+                                            {testCase.input}
+                                        </pre>
                                         <strong>Output:</strong>
-                                        <pre className={darkMode ? 'bg-dark text-white p-2' : ''}>{testCase.output}</pre>
+                                        <pre className={darkMode ? 'bg-dark text-white p-2' : ''}>
+                                            {testCase.output}
+                                        </pre>
                                     </div>
                                 ))}
                             </div>
@@ -246,86 +321,78 @@ main();`
                                     onChange={handleThemeChange}
                                 >
                                     <option value="vs-dark">Dark</option>
-                                    <option value="light">Light</option>
+                                    <option value="vs">Light</option>
                                 </select>
                             </div>
-                            <button className="btn btn-warning" onClick={handleSaveCode}>
+                            <button className="btn btn-warning" onClick={() => handleSaveCode(true)}>
                                 💾 Save
                             </button>
                         </div>
 
                         <Editor
-                            height="300px"
-                            language={language}
+                            height="70vh"
+                            language={languageMap[language]}
                             theme={theme}
                             value={code}
                             onChange={handleEditorChange}
-                            options={{
-                                minimap: { enabled: false },
-                                fontSize: 16,
-                            }}
+                            options={editorOptions}
+                            onMount={handleEditorMount}
                         />
 
                         <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
-                            <div className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
-                                <h5>Sample Input 1</h5>
-                                <div className="indicator" style={{ backgroundColor: statusIndicators[0] }}></div>
-                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
-                                    {problem?.sampleTestCases[0]?.input}
-                                </pre>
-                                <h5>Sample Output 1</h5>
-                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
-                                    {problem?.sampleTestCases[0]?.output}
-                                </pre>
-                            </div>
-
-                            <div className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
-                                <h5>Sample Input 2</h5>
-                                <div className="indicator" style={{ backgroundColor: statusIndicators[1] }}></div>
-                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
-                                    {problem?.sampleTestCases[1]?.input}
-                                </pre>
-                                <h5>Sample Output 2</h5>
-                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
-                                    {problem?.sampleTestCases[1]?.output}
-                                </pre>
-                            </div>
+                            {problem?.sampleTestCases.slice(0, 2).map((testCase, idx) => (
+                                <div key={idx} className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+                                    <h5>Sample Input {idx + 1}</h5>
+                                    <div className="indicator" style={{ backgroundColor: statusIndicators[idx] }}></div>
+                                    <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                        {testCase.input}
+                                    </pre>
+                                    <h5>Sample Output {idx + 1}</h5>
+                                    <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                        {testCase.output}
+                                    </pre>
+                                </div>
+                            ))}
                         </div>
 
-
                         <div className="action-buttons mt-4">
-                            <button className="btn btn-primary mr-2" onClick={handleRunCode} disabled={loading}>
+                            <button className={`btn btn-primary mr-2 ${darkMode ? 'text-white' : 'text-dark'}`}
+                                onClick={handleRunCode}
+                                disabled={loading}>
                                 {loading ? 'Running...' : '▶ Run'}
                             </button>
-                            <button className="btn btn-success" onClick={handleSubmitCode}>
+                            <button className={`btn btn-success ${darkMode ? 'text-white' : 'text-dark'}`}
+                                onClick={handleSubmitCode}>
                                 {loading ? 'Processing...' : 'Submit'}
                             </button>
                         </div>
 
-                        {runResult && (
-                            <div className="run-result mt-4">
-                                <h5>Run Result:</h5>
-                                <pre>{JSON.stringify(runResult, null, 2)}</pre>
-                            </div>
-                        )}
-
                         {submitResult && (
                             <div className="submit-result mt-4">
-                                <h5>Submit Result:</h5>
+                                <h5 className={`${darkMode ? 'text-light' : 'text-dark'}`}>
+                                    Test Results ({testCasesPassed}/{totalTestCases} Passed)
+                                </h5>
                                 <div className="row">
                                     {submitResult.results.map((result, index) => (
                                         <div className="col-md-6" key={index}>
                                             <div className="card mb-3">
                                                 <div className="card-body">
-                                                    <h6 className="card-title">Test Case {index + 1}</h6>
-                                                    <p className="card-text">
-                                                        Success: {result.success ? '✅' : '❌'}
+                                                    <h6 className={`card-title ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                        Test Case {index + 1}
+                                                    </h6>
+                                                    <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                        Status: {result.success ? '✅ Passed' : '❌ Failed'}
                                                     </p>
-                                                    <p className="card-text">Input: {result.input}</p>
-                                                    <p className="card-text">Expected: {result.expected_output}</p>
-                                                    <p className="card-text">
-                                                        Received: {atob(result.actual_output)}
-                                                    </p>
+                                                    {!result.success && (
+                                                        <>
+                                                            <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                                Expected: {result.expected_output}
+                                                            </p>
+                                                            <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                                Received: {atob(result.actual_output)}
+                                                            </p>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>

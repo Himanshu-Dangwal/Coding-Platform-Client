@@ -12,6 +12,7 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        setErrorMessage('');
         e.preventDefault();
 
         try {
