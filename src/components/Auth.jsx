@@ -40,7 +40,14 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
 
                     // Notify user of successful login and redirect
                     alert('Login Successful');
-                    navigate('/problems');
+                    if (localStorage.getItem("problemId")) {
+                        const id = localStorage.getItem("problemId");
+                        localStorage.removeItem("problemId");
+                        console.log(id);
+                        navigate(`/attempt/${id}`)
+                    } else {
+                        navigate('/problems');
+                    }
                 } else {
                     // Notify user of successful registration and redirect to login
                     alert('Registration Successful');

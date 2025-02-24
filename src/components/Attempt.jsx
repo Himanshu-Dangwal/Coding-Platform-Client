@@ -203,6 +203,7 @@ main();`
         } else {
             alert("You need to login first to submit the code");
             localStorage.setItem(`problem_${id}_${language}`, code);
+            localStorage.setItem("problemId", id);
         }
     };
 
