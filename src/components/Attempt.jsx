@@ -26,6 +26,8 @@ const Attempt = ({ darkMode, isLoggedIn, setIsLoggedIn }) => {
     const [congratulations, setCongratulations] = useState(false);
     const [totalTestCases, setTotalCases] = useState(0);
     const [testCasesPassed, setTestCasesPassed] = useState(0);
+    const [editorFocused, setEditorFocused] = useState(false);
+
     const editorRef = useRef(null);
 
     const defaultBoilerplateCode = {
@@ -135,6 +137,25 @@ main();`
         }
     };
 
+
+    const handleResetCode = () => {
+        if (localStorage.getItem(`problem_${id}_${language}`)) {
+            localStorage.removeItem(`problem_${id}_${language}`)
+        }
+
+        const languageMappingArray = problem.problemLanguageMapping;
+        let languageMapping = languageMappingArray.find(
+            (mapping) => mapping.language === language
+        );
+
+        if (languageMapping) {
+            const storedCode = localStorage.getItem(`problem_${id}_${language}`);
+            setCode(storedCode || languageMapping.problemLanguageCodeMapping[0].boilerplateCode);
+        } else {
+            setCode(defaultBoilerplateCode[language]);
+        }
+    }
+
     const updateStatusIndicators = (results) => {
         const updatedIndicators = [...statusIndicators];
         for (let i = 0; i < Math.min(2, results.length); i++) {
@@ -201,53 +222,21 @@ main();`
         wordWrap: 'on',
     };
 
-    const handleEditorMount = (editor, monaco) => {
-        editorRef.current = editor;
-        const editorNode = editor.getDomNode();
 
-        // Add resize observer to track editor height changes
-        const resizeObserver = new ResizeObserver(() => {
-            // Force update scroll position calculations
-            editor.layout();
-        });
 
-        // Handle wheel events with improved edge detection
-        editorNode.addEventListener('wheel', (event) => {
-            const scrollTop = editor.getScrollTop();
-            const scrollHeight = editor.getScrollHeight();
-            const editorHeight = editor.getLayoutInfo().height;
-            const delta = -event.deltaY;
 
-            // Check if editor is scrollable at all
-            const isScrollable = scrollHeight > editorHeight;
-            if (!isScrollable) {
-                event.stopPropagation();
-                return;
+    // Add click-outside handler
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (editorRef.current &&
+                !editorRef.current.getDomNode().contains(event.target)) {
+                setEditorFocused(false);
             }
+        };
 
-            // Calculate potential new scroll position
-            const potentialScrollTop = scrollTop + delta;
-            const canScrollUp = potentialScrollTop > 0;
-            const canScrollDown = potentialScrollTop < scrollHeight - editorHeight;
-
-            // Check if we're at the boundaries
-            const atTop = scrollTop <= 0 && delta > 0;
-            const atBottom = scrollTop >= scrollHeight - editorHeight && delta < 0;
-
-            if ((atTop || atBottom) || (!canScrollUp && !canScrollDown)) {
-                // Allow page scroll when at boundaries
-                event.stopPropagation();
-                return;
-            }
-
-            // Otherwise handle editor scroll
-            event.preventDefault();
-            event.stopPropagation();
-            editor.setScrollTop(potentialScrollTop);
-        }, { passive: false });
-
-        resizeObserver.observe(editorNode);
-    };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
 
     const renderTextWithLineBreaks = (text) => {
         return text?.split('\n').map((line, index) => (
@@ -324,20 +313,25 @@ main();`
                                     <option value="vs">Light</option>
                                 </select>
                             </div>
+                            <button className="btn btn-danger" onClick={() => handleResetCode(true)}>
+                                🔄 Reset
+                            </button>
                             <button className="btn btn-warning" onClick={() => handleSaveCode(true)}>
                                 💾 Save
                             </button>
                         </div>
 
-                        <Editor
-                            height="70vh"
-                            language={languageMap[language]}
-                            theme={theme}
-                            value={code}
-                            onChange={handleEditorChange}
-                            options={editorOptions}
-                            onMount={handleEditorMount}
-                        />
+                        <div className="editor-wrapper">
+                            <Editor
+                                height="80vh"
+                                language={languageMap[language]}
+                                theme={theme}
+                                value={code}
+                                onChange={handleEditorChange}
+                                options={editorOptions}
+                            // onMount={handleEditorMount}
+                            />
+                        </div>
 
                         <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                             {problem?.sampleTestCases.slice(0, 2).map((testCase, idx) => (
@@ -366,6 +360,46 @@ main();`
                                 {loading ? 'Processing...' : 'Submit'}
                             </button>
                         </div>
+
+                        {runResult && (
+                            <div className="submit-result mt-4">
+                                <h5 className={`${darkMode ? 'text-light' : 'text-dark'}`}>
+                                    Test Results ({testCasesPassed}/{totalTestCases} Passed)
+                                </h5>
+                                <div className="row">
+                                    {runResult.results.map((result, index) => (
+                                        <div className="col-md-6" key={index}>
+                                            <div className="card mb-3">
+                                                <div className="card-body">
+                                                    <h6 className={`card-title ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                        Test Case {index + 1}
+                                                    </h6>
+                                                    <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                        Status: {result.success ? '✅ Passed' : '❌ Failed'}
+                                                    </p>
+                                                    <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>Input: {result.input}</p>
+                                                    <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>Expected: {result.expected_output}</p>
+                                                    <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                        Your Output : {result.actual_output}
+                                                    </p>
+                                                    {/* {!result.success && (
+                                                        <>
+                                                            <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                                Expected: {result.expected_output}
+                                                            </p>
+                                                            <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
+                                                                Received: {result.actual_output}
+                                                            </p>
+                                                        </>
+                                                    )} */}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
 
                         {submitResult && (
                             <div className="submit-result mt-4">
