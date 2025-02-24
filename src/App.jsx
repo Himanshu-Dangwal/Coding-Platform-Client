@@ -54,8 +54,8 @@ function App() {
       <div className={`container mt-5 pt-5 ${darkMode ? 'dark-mode' : ''}`}>
         <Routes>
           <Route path="/" element={<LandingPage darkMode={darkMode} />} />
-          <Route path="/login" element={<Auth isLogin={true} setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/register" element={<Auth isLogin={false} />} />
+          <Route path="/login" element={<Auth isLogin={true} setIsLoggedIn={setIsLoggedIn} darkMode={darkMode} />} />
+          <Route path="/register" element={<Auth isLogin={false} darkMode={darkMode} />} />
           <Route path="/problems" element={<ProblemList darkMode={darkMode} />} />
           <Route path="/problems/:id" element={<Problem darkMode={darkMode} />} />
           <Route path="/attempt/:id" element={<Attempt darkMode={darkMode} />} />

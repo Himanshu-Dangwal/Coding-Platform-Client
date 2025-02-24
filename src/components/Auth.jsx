@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Auth = ({ isLogin, setIsLoggedIn }) => {
+const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const emailRef = useRef(null);
+    const usernameRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState(''); // Added for error handling
     const navigate = useNavigate();
 
@@ -55,10 +57,18 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
         }
     };
 
+    useEffect(() => {
+        if (isLogin) {
+            emailRef.current.focus();
+        } else {
+            usernameRef.current.focus();
+        }
+    }, [])
+
     return (
         <div className="container d-flex justify-content-center align-items-center vh-100">
             <div className="card p-4 shadow-lg" style={{ maxWidth: '500px', width: '100%' }}>
-                <h2 className="text-center mb-4">{isLogin ? 'Login' : 'Register'}</h2>
+                <h2 className={`text-center mb-4 text-${darkMode ? 'light' : 'dark'}`}>{isLogin ? 'Login' : 'Register'}</h2>
 
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>} {/* Display errors */}
 
@@ -66,8 +76,9 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
                     {/* Username input (only show if registering) */}
                     {!isLogin && (
                         <div className="form-group mb-3">
-                            <label htmlFor="username" className="form-label">Username</label>
+                            <label htmlFor="username" className={`form-label text-${darkMode ? 'light' : 'dark'}`}>Username</label>
                             <input
+                                ref={usernameRef}
                                 type="text"
                                 className="form-control"
                                 id="username"
@@ -81,8 +92,9 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
 
                     {/* Email input */}
                     <div className="form-group mb-3">
-                        <label htmlFor="email" className="form-label">Email address</label>
+                        <label htmlFor="email" className={`form-label text-${darkMode ? 'light' : 'dark'}`}>Email address</label>
                         <input
+                            ref={emailRef}
                             type="email"
                             className="form-control"
                             id="email"
@@ -95,7 +107,7 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
 
                     {/* Password input */}
                     <div className="form-group mb-3">
-                        <label htmlFor="password" className="form-label">Password</label>
+                        <label htmlFor="password" className={`form-label text-${darkMode ? 'light' : 'dark'}`}>Password</label>
                         <input
                             type="password"
                             className="form-control"
@@ -113,7 +125,7 @@ const Auth = ({ isLogin, setIsLoggedIn }) => {
                     </button>
 
                     {/* Link to toggle between login/register */}
-                    <div className="text-center mt-3">
+                    <div className={`text-center mt-3 text-${darkMode ? 'light' : 'dark'}`}>
                         {isLogin ? (
                             <p>
                                 Don't have an account? <a href="/register">Register here</a>
