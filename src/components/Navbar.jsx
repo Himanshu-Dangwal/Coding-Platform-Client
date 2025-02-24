@@ -5,6 +5,20 @@ const Navbar = ({ isLoggedIn, handleLogout, darkMode, toggleDarkMode }) => {
     const navbarToggle = useRef(null);
     const navbarCollapse = useRef(null);
 
+    const handleToggleDarkModeButtonClick = () => {
+        if (navbarCollapse.current.classList.contains('show')) {
+            navbarToggle.current.click();
+        }
+        toggleDarkMode();
+    }
+
+    const logoutButtonClick = () => {
+        if (navbarCollapse.current.classList.contains('show')) {
+            navbarToggle.current.click();
+        }
+        handleLogout();
+    }
+
     const handleLinkClick = () => {
         if (navbarCollapse.current.classList.contains('show')) {
             navbarToggle.current.click();
@@ -45,19 +59,19 @@ const Navbar = ({ isLoggedIn, handleLogout, darkMode, toggleDarkMode }) => {
                     <div className="d-flex align-items-center">
                         <button
                             className="btn btn-outline-secondary me-2"
-                            onClick={toggleDarkMode}
+                            onClick={handleToggleDarkModeButtonClick}
                         >
                             {darkMode ? '🌞' : '🌙'}
                         </button>
                         {isLoggedIn ? (
                             <button
                                 className="btn btn-danger"
-                                onClick={handleLogout}
+                                onClick={logoutButtonClick}
                             >
                                 Logout
                             </button>
                         ) : (
-                            <Link to="/login" className="btn btn-primary">
+                            <Link to="/login" className="btn btn-primary" onClick={handleLinkClick}>
                                 Login
                             </Link>
                         )}
