@@ -28,7 +28,7 @@ const Navbar = ({ isLoggedIn, handleLogout, darkMode, toggleDarkMode }) => {
     return (
         <nav className={`navbar navbar-expand-lg fixed-top ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
             <div className="container">
-                <Link className="navbar-brand" to="/">CodeBuddy</Link>
+                <Link className="navbar-brand" to="/" onClick={handleLinkClick}>CodeBuddy</Link>
                 <button
                     ref={navbarToggle}
                     className="navbar-toggler"
