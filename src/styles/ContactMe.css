@@ -1,13 +1,42 @@
-.mtop {
+/* .mtop {
     margin-top: 5%;
 }
 
 .mt-50 {
     margin-top: 200px;
-    /* Adjust this value as needed */
+    Adjust this value as needed
 }
 
 .margin-top {
     margin-top: 20%;
-    /* Adjust as needed */
+    Adjust as needed
+} */
+
+/* Profile Page Styling */
+.card-body {
+    padding: 30px;
 }
+
+.card {
+    border-radius: 10px;
+}
+
+.card-body img {
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+
+.list-group-item:hover {
+    background-color: rgba(246, 242, 242, 0.893);
+}
+
+/* .dark-mode .list-group-item:hover {
+    color: white;
+} */
