@@ -19,7 +19,7 @@ const LandingPage = ({ darkMode }) => {
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     color: "#fff", // Ensure text remains readable
-                    height: "100vh", // Ensures it covers the first screen only
+                    height: "90vh", // Ensures it covers the first screen only
                 }}
             >
                 <div
