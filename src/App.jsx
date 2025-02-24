@@ -11,6 +11,7 @@ import MyProfile from './components/MyProfile';
 import "../src/styles/theme.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Footer from './components/Footer';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -63,6 +64,7 @@ function App() {
           <Route path="/profile" element={<MyProfile darkMode={darkMode} />} />
         </Routes>
       </div>
+      <Footer darkMode={darkMode} />
     </Router>
   );
 }

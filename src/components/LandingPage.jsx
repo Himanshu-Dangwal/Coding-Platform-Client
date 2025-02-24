@@ -124,16 +124,7 @@ const LandingPage = ({ darkMode }) => {
             </section>
 
             {/* Footer */}
-            <footer className={`footer bg-${darkMode ? "dark" : "light"} text-${darkMode ? "light" : "dark"} py-4`}>
-                <div className="container text-center">
-                    <p>© 2024 CodeBuddy. All rights reserved.</p>
-                    <div className="social-links">
-                        <a href="#" className="text-light mx-2"><i className="bi bi-github"></i></a>
-                        <a href="#" className="text-light mx-2"><i className="bi bi-twitter"></i></a>
-                        <a href="#" className="text-light mx-2"><i className="bi bi-linkedin"></i></a>
-                    </div>
-                </div>
-            </footer>
+
         </div>
     );
 };
