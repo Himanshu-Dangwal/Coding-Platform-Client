@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router-dom';
 
 const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [captchaValue, setCaptchaValue] = useState(null);
+
     const emailRef = useRef(null);
     const usernameRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState(''); // Added for error handling
+    const SITE_KEY = import.meta.env.VITE_SITE_KEY;
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,13 +21,11 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
         e.preventDefault();
 
         try {
-            // Payload for API request (login or registration)
             const payload = isLogin
-                ? { email, password }
-                : { username, email, password };
+                ? { email, password, captchaValue }
+                : { username, email, password, captchaValue };
 
-            // API call for login or registration
-            // let HOST = process.env.REACT_APP_HOST;
+
             let HOST = import.meta.env.VITE_HOST;
             const response = await axios.post(
                 `${HOST}/api/user/${isLogin ? 'login' : 'register'}`,
@@ -126,6 +129,11 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
                             required
                         />
                     </div>
+
+                    <ReCAPTCHA
+                        sitekey={SITE_KEY}
+                        onChange={(value) => setCaptchaValue(value)}
+                    />
 
                     {/* Submit button */}
                     <button type="submit" className="btn btn-primary w-100">
