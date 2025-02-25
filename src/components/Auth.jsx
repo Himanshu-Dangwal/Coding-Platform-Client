@@ -10,6 +10,7 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
     const [captchaValue, setCaptchaValue] = useState(null);
 
     const emailRef = useRef(null);
+    const recaptchaRef = useRef(null);
     const usernameRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState(''); // Added for error handling
     const SITE_KEY = import.meta.env.VITE_SITE_KEY;
@@ -65,6 +66,11 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
             const errMessage = error.response?.data?.message || 'Error during authentication';
             setErrorMessage(errMessage);
             console.error('Error:', errMessage);
+        } finally {
+            setCaptchaValue(null);
+            if (recaptchaRef.current) {
+                recaptchaRef.current.reset();
+            }
         }
     };
 
@@ -133,6 +139,7 @@ const Auth = ({ isLogin, setIsLoggedIn, darkMode }) => {
                     <ReCAPTCHA
                         sitekey={SITE_KEY}
                         onChange={(value) => setCaptchaValue(value)}
+                        ref={recaptchaRef}
                     />
 
                     {/* Submit button */}
