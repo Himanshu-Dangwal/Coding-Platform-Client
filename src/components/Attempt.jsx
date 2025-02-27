@@ -182,6 +182,7 @@ main();`
                     { headers }
                 );
 
+                console.log(response.data);
                 updateStatusIndicators(response.data.results);
                 setSubmitResult(response.data);
 
