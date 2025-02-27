@@ -24,6 +24,7 @@ const ProblemList = ({ darkMode, isLoggedIn }) => {
                 },
             });
             setUserCompletedProblems(response.data.problemsCompleted);
+            console.log(response.data.problemsCompleted);
         } catch (error) {
             console.error("Error fetching user completed problems:", error);
         }
