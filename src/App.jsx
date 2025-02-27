@@ -12,6 +12,7 @@ import "../src/styles/theme.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Footer from './components/Footer';
+import Tracks from './components/Tracks';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -53,16 +54,18 @@ function App() {
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
       />
-      <div className={`container mt-5 pt-5 ${darkMode ? 'dark-mode' : ''}`}>
+      <div className={`container mt-0 pt-5 ${darkMode ? 'dark-mode' : ''}`}>
         <Routes>
           <Route path="/" element={<LandingPage darkMode={darkMode} />} />
           <Route path="/login" element={<Auth isLogin={true} setIsLoggedIn={setIsLoggedIn} darkMode={darkMode} />} />
           <Route path="/register" element={<Auth isLogin={false} darkMode={darkMode} />} />
-          <Route path="/problems" element={<ProblemList darkMode={darkMode} />} />
+          <Route path="/problems" element={<ProblemList darkMode={darkMode} isLoggedIn={isLoggedIn} />} />
           <Route path="/problems/:id" element={<Problem darkMode={darkMode} />} />
           <Route path="/attempt/:id" element={<Attempt isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} darkMode={darkMode} />} />
           <Route path="/contact-me" element={<ContactMe darkMode={darkMode} />} />
           <Route path="/profile" element={<MyProfile darkMode={darkMode} />} />
+          <Route path='/tracks' element={<Tracks darkMode={darkMode} />} />
+          <Route path="/tracks/:trackName" element={<ProblemList darkMode={darkMode} isLoggedIn={isLoggedIn} />} />
         </Routes>
       </div>
       <Footer darkMode={darkMode} />

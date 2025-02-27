@@ -32,7 +32,7 @@ const Problem = ({ darkMode }) => {
     };
 
     return (
-        <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+        <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`} style={{ width: "100%" }}>
             {problem ? (
                 <>
                     <div className="card shadow-lg p-4 mb-5 bg-white rounded">
