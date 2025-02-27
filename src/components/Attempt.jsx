@@ -517,11 +517,12 @@ main();`
                                                         </p>
                                                         {!result.success && (
                                                             <>
+                                                                <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>Input: {result.input}</p>
                                                                 <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
                                                                     Expected: {result.expected_output}
                                                                 </p>
                                                                 <p className={`card-text ${darkMode ? 'text-light' : 'text-dark'}`}>
-                                                                    Received: {yourOutput}
+                                                                    Your Output: {yourOutput}
                                                                 </p>
                                                             </>
                                                         )}
