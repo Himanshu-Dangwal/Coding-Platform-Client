@@ -5,7 +5,7 @@ import "../styles/theme.css";
 
 const ProblemList = ({ darkMode, isLoggedIn }) => {
     const [problems, setProblems] = useState([]);
-    const [userCompletedProblems, setUserCompletedProblems] = useState([]);
+    const [userCompletedProblemsIds, setUserCompletedProblemsIds] = useState(new Set());
 
     const { trackName } = useParams();
 
@@ -23,7 +23,8 @@ const ProblemList = ({ darkMode, isLoggedIn }) => {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            setUserCompletedProblems(response.data.problemsCompleted);
+            const completedProblemIds = new Set(response.data.problemsCompleted.map(problem => problem.problemId));
+            setUserCompletedProblemsIds(completedProblemIds);
             console.log(response.data.problemsCompleted);
         } catch (error) {
             console.error("Error fetching user completed problems:", error);
@@ -50,7 +51,7 @@ const ProblemList = ({ darkMode, isLoggedIn }) => {
             <h1 className="text-center">{trackName ? `Problems for ${trackName.toUpperCase()}` : "All Problems"}</h1>
             <div className="row" style={{ width: "100%" }}>
                 {problems.map((problem) => {
-                    const isCompleted = isLoggedIn && userCompletedProblems.includes(problem._id);
+                    const isCompleted = isLoggedIn && userCompletedProblemsIds.has(problem._id);
 
                     return (
                         <div key={problem._id} className="col-md-6 mb-4">
