@@ -7,6 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Attempt.css';
 import RunResult from './RunResult';
 import SubmitResult from './SubmitResult';
+import GoogleGeminiAPI from '../api/GoogleGeminiAPI';
+import '../styles/CodeBuddy.css'
+import ReactMarkdown from 'react-markdown';
 
 const languageMap = {
     "C++": "cpp",
@@ -28,7 +31,9 @@ const Attempt = ({ darkMode, isLoggedIn, setIsLoggedIn }) => {
     const [congratulations, setCongratulations] = useState(false);
     const [totalTestCases, setTotalCases] = useState(0);
     const [testCasesPassed, setTestCasesPassed] = useState(0);
-    const [editorFocused, setEditorFocused] = useState(false);
+    const [showHintPopup, setShowHintPopup] = useState(false);
+    const [hints, setHints] = useState([]);
+    const [loadingHints, setLoadingHints] = useState(false);
 
     const editorRef = useRef(null);
 
@@ -53,6 +58,35 @@ if __name__ == "__main__":
 }
 main();`
     };
+
+    const fetchHints = async (more = false) => {
+        setLoadingHints(true);
+
+        if (more) {
+            try {
+                const response = await GoogleGeminiAPI.getMoreConcepts(problem?.description);
+                setHints((prevHints) => [...prevHints, response]);
+            } catch (error) {
+                console.error('Error fetching hints:', error);
+            } finally {
+                setLoadingHints(false);
+            }
+        } else {
+            try {
+                const response = await GoogleGeminiAPI.getHints(problem?.description);
+                setHints((prevHints) => [...prevHints, response]);
+            } catch (error) {
+                console.error('Error fetching hints:', error);
+            } finally {
+                setLoadingHints(false);
+            }
+        }
+
+    };
+
+    useEffect(() => {
+
+    }, [])
 
     useEffect(() => {
         setTheme(darkMode ? 'vs-dark' : 'vs');
@@ -226,22 +260,6 @@ main();`
         wordWrap: 'on',
     };
 
-
-
-
-    // Add click-outside handler
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (editorRef.current &&
-                !editorRef.current.getDomNode().contains(event.target)) {
-                setEditorFocused(false);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        return () => document.removeEventListener('click', handleClickOutside);
-    }, []);
-
     const renderTextWithLineBreaks = (text) => {
         return text?.split('\n').map((line, index) => (
             <span key={index}>
@@ -336,6 +354,31 @@ main();`
                             // onMount={handleEditorMount}
                             />
                         </div>
+
+                        <div className="action-buttons mt-4">
+                            <button className="btn btn-info" onClick={() => { setShowHintPopup(true); fetchHints(); }}>
+                                🤖 Ask CodeBuddy
+                            </button>
+                        </div>
+
+                        {showHintPopup && (
+                            <div className="hint-popup">
+                                <button className="close-popup" onClick={() => setShowHintPopup(false)}>×</button>
+                                <h4>💡 CodeBuddy Hints</h4>
+                                <div className="hint-content">
+                                    {hints.length === 0 ? (
+                                        loadingHints ? <p>Fetching hints...</p> : <p>No hints available.</p>
+                                    ) : (
+                                        hints.map((hint, index) => (
+                                            <ReactMarkdown key={index}>{hint}</ReactMarkdown>
+                                        ))
+                                    )}
+                                </div>
+                                <button className="btn btn-secondary" onClick={() => fetchHints(true)} disabled={loadingHints}>
+                                    {loadingHints ? 'Loading...' : 'More Hints'}
+                                </button>
+                            </div>
+                        )}
 
                         <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                             {problem?.sampleTestCases.slice(0, 2).map((testCase, idx) => (

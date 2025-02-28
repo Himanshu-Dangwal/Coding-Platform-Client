@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.22.0",
     "@monaco-editor/react": "^4.6.0",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.7.7",
@@ -20,6 +21,7 @@
     "react-codemirror2": "^8.0.0",
     "react-dom": "^18.3.1",
     "react-google-recaptcha": "^3.1.0",
+    "react-markdown": "^10.0.0",
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
