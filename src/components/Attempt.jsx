@@ -411,7 +411,7 @@ main();`
 
                         {runResult && <RunResult darkMode={darkMode} runResult={runResult} testCasesPassed={testCasesPassed} totalTestCases={totalTestCases} />}
 
-                        {submitResult && <SubmitResult darkMode={darkMode} runResult={runResult} testCasesPassed={testCasesPassed} totalTestCases={totalTestCases} />}
+                        {submitResult && <SubmitResult darkMode={darkMode} submitResult={submitResult} testCasesPassed={testCasesPassed} totalTestCases={totalTestCases} />}
 
 
                     </div>
