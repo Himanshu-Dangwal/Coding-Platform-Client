@@ -129,25 +129,20 @@ border-radius: 5px;
 }
 
 .left-side {
-    width: 100%;
+    width: 50%;
     margin-bottom: 5%;
 }
 
 .right-side {
-    width: 100%;
+    width: 50%;
 }
 
 .indicator {
     display: inline-block;
-    /* Allows for side-by-side display with the heading */
     width: 10px;
-    /* Set width for the indicator */
     height: 10px;
-    /* Set height for the indicator */
     margin-left: 8px;
-    /* Adds space between the heading and the indicator */
     vertical-align: middle;
-    /* Aligns the indicator vertically with the heading */
 }
 
 .congratulations-animation {

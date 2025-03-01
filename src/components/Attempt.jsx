@@ -305,6 +305,21 @@ main();`
                             </div>
                         </div>
                     </div>
+                    <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+                        {problem?.sampleTestCases.slice(0, 2).map((testCase, idx) => (
+                            <div key={idx} className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+                                <h5>Sample Input {idx + 1}</h5>
+                                <div className="indicator" style={{ backgroundColor: statusIndicators[idx] }}></div>
+                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                    {testCase.input}
+                                </pre>
+                                <h5>Sample Output {idx + 1}</h5>
+                                <pre className={darkMode ? 'bg-dark text-white p-2' : 'bg-light text-dark p-2'}>
+                                    {testCase.output}
+                                </pre>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className={`col-md-6 right-side ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
@@ -380,7 +395,7 @@ main();`
                             </div>
                         )}
 
-                        <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+                        {/* <div className={`sample-io-section mt-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                             {problem?.sampleTestCases.slice(0, 2).map((testCase, idx) => (
                                 <div key={idx} className={`io-block ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
                                     <h5>Sample Input {idx + 1}</h5>
@@ -394,7 +409,7 @@ main();`
                                     </pre>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
 
                         <div className="action-buttons mt-4">
                             <button className={`btn btn-primary mr-2 ${darkMode ? 'text-white' : 'text-dark'}`}
