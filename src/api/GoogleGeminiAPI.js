@@ -9,7 +9,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 const GoogleGeminiAPI = {
     async getHints(problemStatement) {
         try {
-            const prompt = `Provide hints to solve this coding problem without giving the full solution:\n\n${problemStatement}`;
+            const prompt = `Provide hints to solve this coding problem without giving the full solution or any pseudocode:\n\n${problemStatement}`;
             const result = await model.generateContent(prompt);
             return result.response.text();
         } catch (error) {
@@ -20,7 +20,7 @@ const GoogleGeminiAPI = {
 
     async getMoreConcepts(problemStatement) {
         try {
-            const prompt = `Provide conceptual insights and techniques useful for solving this coding problem, without providing the full code:\n\n${problemStatement}`;
+            const prompt = `Provide conceptual insights and techniques useful for solving this coding problem, without providing the full code or any pseudocode:\n\n${problemStatement}`;
             const result = await model.generateContent(prompt);
             return result.response.text();
         } catch (error) {
