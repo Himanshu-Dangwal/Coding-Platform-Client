@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import ProblemListCompleted from './ProblemListCompleted'; // Import the ProblemList component
+import ProblemListCompleted from './ProblemListCompleted';
 import "../styles/ContactMe.css";
 import profilePicture from "../images/profileEmoji.png"
 
