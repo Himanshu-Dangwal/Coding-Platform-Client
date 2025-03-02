@@ -43,6 +43,7 @@ using namespace std;
 
 int main() {
     
+    return 0;
 }`,
         "Java": `public class Main {
     public static void main(String[] args) {
